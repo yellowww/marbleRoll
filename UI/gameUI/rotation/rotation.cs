@@ -16,10 +16,13 @@ public class rotation : MonoBehaviour
     {
         if(main.selectedObject != null)
         {
-            objectMovement movementScript = main.selectedObject.GetComponent<objectMovement>();
+            if (checkIfMovable(main.selectedObject))
+            {
+                objectMovement movementScript = main.selectedObject.GetComponent<objectMovement>();
 
-            movementScript.rotation = (movementScript.rotation - 90) % 360;
-            main.selectedObject.transform.Rotate(new Vector3(0, -90, 0), Space.Self);
+                movementScript.rotation = (movementScript.rotation - 90) % 360;
+                main.selectedObject.transform.Rotate(new Vector3(0, -90, 0), Space.Self);
+            }
         }
 
     }
@@ -27,12 +30,21 @@ public class rotation : MonoBehaviour
     {
         if(main.selectedObject != null)
         {
-            objectMovement movementScript = main.selectedObject.GetComponent<objectMovement>();
+            if(checkIfMovable(main.selectedObject))
+            {
+                objectMovement movementScript = main.selectedObject.GetComponent<objectMovement>();
 
-            movementScript.rotation = (movementScript.rotation+90) % 360;
-            main.selectedObject.transform.Rotate(new Vector3(0, 90, 0), Space.Self);
+                movementScript.rotation = (movementScript.rotation + 90) % 360;
+                main.selectedObject.transform.Rotate(new Vector3(0, 90, 0), Space.Self);
+            }       
         }
 
+    }
+
+    bool checkIfMovable(GameObject selected)
+    {
+        objectMovement script = selected.GetComponent<objectMovement>();
+        return script.moveable;
     }
 
     public void UIHover ()

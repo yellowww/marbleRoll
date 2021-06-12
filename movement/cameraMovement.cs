@@ -18,7 +18,7 @@ public class cameraMovement : MonoBehaviour
     public bool dragingObject;
     public int currentDragingObject;
 
-
+    
 
     // Start is called before the first frame update
     void Start()

@@ -28,7 +28,7 @@ public class objectMovement : MonoBehaviour
 
     GameObject[] lockedWith = new GameObject[] { null, null };
 
-
+    public bool moveable = true;
 
     void Start()
     {
@@ -41,8 +41,11 @@ public class objectMovement : MonoBehaviour
     {
         if(cameraMovementScript.dragingObject && cameraMovementScript.currentDragingObject == int.Parse(this.name.Split('k')[1]))
         {
-            moveObject();
-            checkHotbarHover();
+            if (moveable)
+            {
+                moveObject();
+                checkHotbarHover();
+            }
             firstMovementFrame = false;
         } else
         {

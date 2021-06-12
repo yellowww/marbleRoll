@@ -56,7 +56,9 @@ public class hotbarElement : MonoBehaviour
             main.allBlocks.Add(newBlock);
 
             cameraMovement.currentDragingObject = main.objectsOnScreen;
-            
+            main.selectedObject = newBlock;
+
+
             cameraMovement.firstFrame = true;
             cameraMovement.dragingObject = true;
             main.invintoryClickRelease = true;

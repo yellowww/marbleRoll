@@ -11,11 +11,7 @@ public class hotBarBack : MonoBehaviour
         main = FindObjectOfType<main>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 
     public void backHover()
     {

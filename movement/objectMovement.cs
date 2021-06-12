@@ -39,19 +39,24 @@ public class objectMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(cameraMovementScript.dragingObject && cameraMovementScript.currentDragingObject == int.Parse(this.name.Split('k')[1]))
+        if(!mainScript.loadingLevel)
         {
-            if (moveable)
+            if (cameraMovementScript.dragingObject && cameraMovementScript.currentDragingObject == int.Parse(this.name.Split('k')[1]))
             {
-                moveObject();
-                checkHotbarHover();
+                if (moveable)
+                {
+                    moveObject();
+                    checkHotbarHover();
+                }
+                firstMovementFrame = false;
             }
-            firstMovementFrame = false;
-        } else
-        {
-            firstMovementFrame = true;
+            else
+            {
+                firstMovementFrame = true;
+            }
+            doAminations();
         }
-        doAminations();
+
     }
 
 
@@ -219,7 +224,7 @@ public class objectMovement : MonoBehaviour
         return false;
     }
 
-    float[] getMetaDataFrom(GameObject piece, float positionModifier)
+    public float[] getMetaDataFrom(GameObject piece, float positionModifier)
     {
         GameObject startObject = piece.transform.Find("startPos").gameObject;
         GameObject endObject = piece.transform.Find("endPos").gameObject;
@@ -234,7 +239,7 @@ public class objectMovement : MonoBehaviour
         return meta;
     }
 
-    Vector3 adjustMetaValues(Vector3 position, float rotation, GameObject piece)
+    public Vector3 adjustMetaValues(Vector3 position, float rotation, GameObject piece)
     {
         Vector3 newPosition = new Vector3(0, 0, 0);
         if(rotation == 0f)

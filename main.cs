@@ -16,13 +16,14 @@ public class main : MonoBehaviour
     public bool inventoryElementHover = false;
     public bool totalInventoryHover = false;
 
+    public bool loadingLevel = true;
+
     public List<GameObject> allBlocks = null;
     void Start()
     {
-        init(new GameObject[]{GameObject.Find("block1")});
     }
 
-    private void init(GameObject[] startingBlocks)
+    public void init(GameObject[] startingBlocks)
     {
         allBlocks = new List<GameObject>(startingBlocks);
     }

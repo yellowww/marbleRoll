@@ -24,7 +24,7 @@ public class hotbarElement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(main.invintoryClickRelease)
+        if(main.invintoryClickRelease && !main.loadingLevel)
         {
             checkMouse();
         }

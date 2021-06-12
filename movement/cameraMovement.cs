@@ -31,8 +31,12 @@ public class cameraMovement : MonoBehaviour
     
     // Update is called once per frame
     void Update()
-    {       
-        updateMouseInputs();
+    {
+        if(!main.loadingLevel)
+        {
+            updateMouseInputs();
+        }
+        
     }
 
     bool canDrag()

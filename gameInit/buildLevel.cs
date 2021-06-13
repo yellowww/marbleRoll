@@ -5,18 +5,21 @@ using UnityEngine;
 public class buildLevel : MonoBehaviour
 {
     // Start is called before the first frame update
-    objectMovement objectMovement;
     main main;
     GameObject parent;
 
     public GameObject[] allPrefabs = new GameObject[] { };
 
+    string[] metaIndex = new string[] { "ramp", "rightAngleCurve" };
+    //        bx-0  by-1   bz-2   ex-3 ey-4   ez-5   br-6  er-7
+    float[] allMeta = new float[]              {0, 90};
+
     void Start()
     {
-        objectMovement = FindObjectOfType<objectMovement>();
+        
         main = FindObjectOfType<main>();
         parent = GameObject.Find("blockContainer");
-        build(3);
+        build(50);
     }
 
 
@@ -26,7 +29,9 @@ public class buildLevel : MonoBehaviour
         bool firstLoop = true;
         GameObject lastBlock;
         GameObject thisBlock;
-
+        float rotationBuffer = 0;
+        float thisRotation;
+        objectMovement blockScript;
         while (currentPeiceI<=targetPeices)
         {
             currentPeiceI++;
@@ -43,11 +48,24 @@ public class buildLevel : MonoBehaviour
             else
             {
                 lastBlock = GameObject.Find("block" + (currentPeiceI - 1).ToString());
-                float[] lastBlockMeta = getMetaDataFrom(lastBlock, 0);
-                Debug.Log(lastBlockMeta[1]);
-                thisBlock = Instantiate(allPrefabs[0], new Vector3(0,0,0), Quaternion.identity);
+                float[] lastBlockMeta = getMetaDataFrom(lastBlock);
+                int thisBlockType = Random.Range(0, allPrefabs.Length);
+                thisBlock = Instantiate(allPrefabs[thisBlockType], new Vector3(0,0,0), Quaternion.identity);
                 main.allBlocks.Add(thisBlock);
-                float[] thisBlockMeta = getMetaDataFrom(thisBlock, 0);
+
+                blockScript = thisBlock.GetComponent<objectMovement>();
+
+                blockScript.rotation = rotationBuffer % 360;
+                thisBlock.transform.Rotate(new Vector3(0, rotationBuffer % 360, 0), Space.Self);
+                float[] thisBlockMeta = getMetaDataFrom(thisBlock);
+
+                thisRotation = allMeta[System.Array.IndexOf(metaIndex, blockScript.blockType)];
+                rotationBuffer += thisRotation;
+
+
+
+                
+
 
                 float thisBlockX = lastBlock.transform.position.x + lastBlockMeta[3] - thisBlockMeta[0];
                 float thisBlockY = lastBlock.transform.position.y + lastBlockMeta[4] - thisBlockMeta[1];
@@ -79,8 +97,9 @@ public class buildLevel : MonoBehaviour
         return allObjects;
     }
 
-    float[] getMetaDataFrom(GameObject piece, float positionModifier)
+    float[] getMetaDataFrom(GameObject piece)
     {
+        float positionModifier = piece.transform.localRotation.eulerAngles.y;
         GameObject startObject = piece.transform.Find("startPos").gameObject;
         GameObject endObject = piece.transform.Find("endPos").gameObject;
         Vector3 startPos = piece.transform.TransformPoint(startObject.transform.position);

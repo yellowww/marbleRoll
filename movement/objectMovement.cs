@@ -18,10 +18,10 @@ public class objectMovement : MonoBehaviour
 
     public float rotation = 0;
 
-    string[] metaIndex = new string[] { "ramp", "rightAngleCurve" };
+    public string[] metaIndex = new string[] { "ramp", "rightAngleCurve" };
     //        bx-0  by-1   bz-2   ex-3 ey-4   ez-5   br-6  er-7
-    float[][] allMeta = new float[][] { new float[2] {0f, 180f},
-                                        new float[2] {0f, -90f } };
+    public float[][] allMeta = new float[][] { new float[2] {0f, 180f},
+                                               new float[2] {0f, -90f } };
 
     //                             front  back
     bool[] endLocks = new bool[] { false, false };
@@ -89,7 +89,6 @@ public class objectMovement : MonoBehaviour
                 GameObject attachedFrontObject = lockedWith[1];
                 objectMovement attachedScript = attachedFrontObject.GetComponent<objectMovement>();
                 attachedScript.endLocks[0] = false;
-                Debug.Log("done");
                 attachedScript.lockedWith[0] = null;
                 lockedWith[1] = null;
             }

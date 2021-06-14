@@ -7,6 +7,7 @@ public class buildLevel : MonoBehaviour
     // Start is called before the first frame update
     main main;
     GameObject parent;
+    GameObject buildContainer;
 
     public GameObject[] allPrefabs = new GameObject[] { };
 
@@ -19,7 +20,8 @@ public class buildLevel : MonoBehaviour
         
         main = FindObjectOfType<main>();
         parent = GameObject.Find("blockContainer");
-        build(50);
+        buildContainer = GameObject.Find("buildLevelContainer");
+        build(70);
     }
 
 
@@ -49,8 +51,8 @@ public class buildLevel : MonoBehaviour
             {
                 lastBlock = GameObject.Find("block" + (currentPeiceI - 1).ToString());
                 float[] lastBlockMeta = getMetaDataFrom(lastBlock);
-                int thisBlockType = Random.Range(0, allPrefabs.Length);
-                thisBlock = Instantiate(allPrefabs[thisBlockType], new Vector3(0,0,0), Quaternion.identity);
+                GameObject pieceObject = findBestPiece(13, lastBlock.transform.position.x + lastBlockMeta[3], lastBlock.transform.position.z + lastBlockMeta[5], rotationBuffer);
+                thisBlock = Instantiate(pieceObject, new Vector3(0,0,0), Quaternion.identity);
                 main.allBlocks.Add(thisBlock);
 
                 blockScript = thisBlock.GetComponent<objectMovement>();
@@ -85,6 +87,84 @@ public class buildLevel : MonoBehaviour
         main.init(getAllInitiatedObjects());
         main.loadingLevel = false;
 
+    }
+
+    GameObject findBestPiece(float boundery, float currentX, float currentZ,float rotation)
+    {
+        if(Mathf.Abs(currentX) > boundery || Mathf.Abs(currentZ) > boundery)
+        {
+             float xStabalizer = currentX / Mathf.Abs(currentX);
+             float zStabalizer = currentZ / Mathf.Abs(currentZ);
+             float[] xDists = new float[allPrefabs.Length];
+             float[] zDists = new float[allPrefabs.Length];
+
+             for (int i=0;i<allPrefabs.Length;i++)
+             {
+                 GameObject thisBlock= Instantiate(allPrefabs[i], new Vector3(0, 0, 0), Quaternion.identity);
+                 thisBlock.transform.Rotate(new Vector3(0, rotation % 360, 0), Space.Self);
+                 thisBlock.transform.parent = buildContainer.transform;
+                 float[] thisPieceMeta = getMetaDataFrom(thisBlock);
+                 Destroy(thisBlock);
+                 xDists[i] = thisPieceMeta[3] * xStabalizer;
+                 zDists[i] = thisPieceMeta[5] * zStabalizer;
+
+             }
+
+             bool offX = Mathf.Abs(currentX) > boundery;
+             bool offZ = Mathf.Abs(currentZ) > boundery;
+
+             float[] totalOffValue = new float[allPrefabs.Length];
+
+             if(offX && offZ)
+             {
+                 for(int i = 0; i < allPrefabs.Length;i++)
+                 {
+                     totalOffValue[i] = xDists[i] * zDists[i];
+                 }
+             } else if(offX)
+             {
+                 totalOffValue = xDists;
+             } else if(offZ)
+             {
+                 totalOffValue = zDists;
+             }
+
+            int[] minValues = getMin(totalOffValue);
+            int blockType = Random.Range(0, minValues.Length);
+            //Debug.Log(totalOffValue[0].ToString() + " strait");
+            //Debug.Log(totalOffValue[1].ToString() + " curve");
+            //Debug.Log(blockType);
+            GameObject returnObject = allPrefabs[minValues[blockType]];
+            return returnObject;
+        } else
+        {
+            int blockType = Random.Range(0, allPrefabs.Length);
+            return allPrefabs[blockType];
+        }
+    }
+
+    int[] getMin(float[] input)
+    {
+        float min = Mathf.Infinity;
+        List<int> currentMinI = new List<int>();
+        for (int i=0;i<input.Length;i++)
+        {
+            if(input[i]<min)
+            {
+                min = input[i];
+                currentMinI = new List<int>();
+                currentMinI.Add(i);
+            } else if(input[i] == min)
+            {
+                currentMinI.Add(i);
+            }
+        }
+        int[] returnArray = new int[currentMinI.Count];
+        for(int i=0;i<currentMinI.Count;i++)
+        {
+            returnArray[i] = currentMinI[i];
+        }
+        return returnArray;
     }
 
     GameObject[] getAllInitiatedObjects()

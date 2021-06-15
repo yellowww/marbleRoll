@@ -15,6 +15,7 @@ public class main : MonoBehaviour
     public bool inventoryBackHover = false;
     public bool inventoryElementHover = false;
     public bool totalInventoryHover = false;
+    public bool canCompleateLevel = false;
 
     public bool loadingLevel = true;
 

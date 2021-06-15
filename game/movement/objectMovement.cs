@@ -14,14 +14,13 @@ public class objectMovement : MonoBehaviour
     float offZ;
     bool thisHotbarHover = false;
     bool doScaleAnimation = false;
-    public Vector3 toScaleValue = new Vector3(0,0,0);
+    public Vector3 toScaleValue = new Vector3(0, 0, 0);
 
     public float rotation = 0;
 
-    public string[] metaIndex = new string[] { "ramp", "rightAngleCurve" };
+    public string[] metaIndex;
     //        bx-0  by-1   bz-2   ex-3 ey-4   ez-5   br-6  er-7
-    public float[][] allMeta = new float[][] { new float[2] {0f, 180f},
-                                               new float[2] {0f, -90f } };
+    public float[][] allMeta;
 
     //                             front  back
     bool[] endLocks = new bool[] { false, false };
@@ -34,6 +33,10 @@ public class objectMovement : MonoBehaviour
     {
         cameraMovementScript = FindObjectOfType<cameraMovement>();
         mainScript = FindObjectOfType<main>();
+        metaIndex = new string[] { "ramp", "rightAngleCurve", "leftAngleCurve" };
+        allMeta = new float[][] { new float[2] {0f, 180f},
+                                  new float[2] {0f, -90f },
+                                  new float[2] {0f, 90f } };
     }
 
     // Update is called once per frame
@@ -141,6 +144,7 @@ public class objectMovement : MonoBehaviour
         // this rotationMetaData
         float[] thisRMetaData = allMeta[System.Array.IndexOf(metaIndex, blockType)];
         //this positionMetaData
+        Debug.Log(thisRMetaData[1]);
         float[] thisPMetaData = getMetaDataFrom(this.gameObject, rotation);
         for (int i = 1; i <= mainScript.objectsOnScreen; i++)
         {
@@ -195,13 +199,11 @@ public class objectMovement : MonoBehaviour
                 {
                     lockedWithThis = lockedWith[1].name == selectedObject.name && selectedMovementScript.lockedWith[0].name == this.gameObject.name;
                 }
-
                 if ((anglesMatch == 180f || anglesMatch == 540f) && (endLocksWork || lockedWithThis))
                 {
                     float distX = Mathf.Abs((position.x + thisPMetaData[3]) - (selectedObject.transform.position.x + selectedPMetaData[0]));
                     float distY = Mathf.Abs((position.y + thisPMetaData[4]) - (selectedObject.transform.position.y + selectedPMetaData[1]));
                     float distZ = Mathf.Abs((position.z + thisPMetaData[5]) - (selectedObject.transform.position.z + selectedPMetaData[2]));
- 
                     if (distX < 1.5f && distY < 1.5f && distZ < 1.5f)
                     {
                         

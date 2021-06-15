@@ -11,9 +11,9 @@ public class buildLevel : MonoBehaviour
 
     public GameObject[] allPrefabs = new GameObject[] { };
 
-    string[] metaIndex = new string[] { "ramp", "rightAngleCurve" };
+    string[] metaIndex = new string[] { "ramp", "rightAngleCurve","leftAngleCurve" };
     //        bx-0  by-1   bz-2   ex-3 ey-4   ez-5   br-6  er-7
-    float[] allMeta = new float[]              {0, 90};
+    float[] allMeta = new float[]              {0, 90,-90};
 
     void Start()
     {
@@ -21,7 +21,7 @@ public class buildLevel : MonoBehaviour
         main = FindObjectOfType<main>();
         parent = GameObject.Find("blockContainer");
         buildContainer = GameObject.Find("buildLevelContainer");
-        build(70);
+        build(20);
     }
 
 
@@ -51,7 +51,7 @@ public class buildLevel : MonoBehaviour
             {
                 lastBlock = GameObject.Find("block" + (currentPeiceI - 1).ToString());
                 float[] lastBlockMeta = getMetaDataFrom(lastBlock);
-                GameObject pieceObject = findBestPiece(13, lastBlock.transform.position.x + lastBlockMeta[3], lastBlock.transform.position.z + lastBlockMeta[5], rotationBuffer);
+                GameObject pieceObject = findBestPiece(8, lastBlock.transform.position.x + lastBlockMeta[3], lastBlock.transform.position.z + lastBlockMeta[5], rotationBuffer);
                 thisBlock = Instantiate(pieceObject, new Vector3(0,0,0), Quaternion.identity);
                 main.allBlocks.Add(thisBlock);
 

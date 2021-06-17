@@ -8,6 +8,8 @@ public class buildLevel : MonoBehaviour
     main main;
     GameObject parent;
     GameObject buildContainer;
+    GameObject checkpointContainer;
+    public GameObject checkPointPrefab;
 
     public GameObject[] allPrefabs = new GameObject[] { };
 
@@ -21,6 +23,7 @@ public class buildLevel : MonoBehaviour
         main = FindObjectOfType<main>();
         parent = GameObject.Find("blockContainer");
         buildContainer = GameObject.Find("buildLevelContainer");
+        checkpointContainer = GameObject.Find("checkPoints");
         build(20);
     }
 
@@ -81,10 +84,12 @@ public class buildLevel : MonoBehaviour
 
             }
         }
-
-
         main.objectsOnScreen = currentPeiceI;
-        main.init(getAllInitiatedObjects());
+        GameObject[] allInitiatedBlocks = getAllInitiatedObjects();
+
+        placeCheckpoints(allInitiatedBlocks);
+
+        main.init(allInitiatedBlocks);
         main.loadingLevel = false;
 
     }
@@ -176,6 +181,36 @@ public class buildLevel : MonoBehaviour
         }
         return allObjects;
     }
+
+
+    void placeCheckpoints(GameObject[] allData)
+    {
+        float[] positionX = new float[allData.Length];
+        float[] positionY = new float[allData.Length];
+        float[] positionZ = new float[allData.Length];
+
+        GameObject block;
+        for (int i=0;i<allData.Length;i++)
+        {
+            float[] metaData = getMetaDataFrom(allData[i]);
+            positionX[i] = allData[i].transform.position.x + metaData[3];
+            positionY[i] = allData[i].transform.position.y + metaData[4];
+            positionZ[i] = allData[i].transform.position.z + metaData[5];
+        }
+        int[] usedIndexes = new int[3];
+        for(int i=0; i<3;i++)
+        {
+            int currentPosition = Random.Range(0, allData.Length-2);
+            //Debug.Log(currentPosition);
+            Vector3 position = new Vector3(positionX[currentPosition], positionY[currentPosition], positionZ[currentPosition]);
+            block = Instantiate(checkPointPrefab, position, Quaternion.identity);
+            block.transform.parent = checkpointContainer.transform;
+
+        }
+
+    }
+
+
 
     float[] getMetaDataFrom(GameObject piece)
     {

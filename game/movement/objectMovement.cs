@@ -144,7 +144,6 @@ public class objectMovement : MonoBehaviour
         // this rotationMetaData
         float[] thisRMetaData = allMeta[System.Array.IndexOf(metaIndex, blockType)];
         //this positionMetaData
-        Debug.Log(thisRMetaData[1]);
         float[] thisPMetaData = getMetaDataFrom(this.gameObject, rotation);
         for (int i = 1; i <= mainScript.objectsOnScreen; i++)
         {

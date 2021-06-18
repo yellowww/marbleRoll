@@ -189,7 +189,7 @@ public class buildLevel : MonoBehaviour
         float[] positionY = new float[allData.Length];
         float[] positionZ = new float[allData.Length];
 
-        GameObject block;
+        GameObject thisBlock;
         for (int i=0;i<allData.Length;i++)
         {
             float[] metaData = getMetaDataFrom(allData[i]);
@@ -203,8 +203,15 @@ public class buildLevel : MonoBehaviour
             int currentPosition = Random.Range(0, allData.Length-2);
             //Debug.Log(currentPosition);
             Vector3 position = new Vector3(positionX[currentPosition], positionY[currentPosition], positionZ[currentPosition]);
-            block = Instantiate(checkPointPrefab, position, Quaternion.identity);
-            block.transform.parent = checkpointContainer.transform;
+            thisBlock = Instantiate(checkPointPrefab, position, Quaternion.identity);
+            thisBlock.transform.parent = checkpointContainer.transform;
+
+            objectMovement objectScript = allData[currentPosition].GetComponent<objectMovement>();
+
+            string blockType = objectScript.blockType;
+            float rotation = objectScript.rotation;
+            rotation += allMeta[System.Array.IndexOf(metaIndex, blockType)];
+            thisBlock.transform.Rotate(new Vector3(0, rotation % 360, 0), Space.Self);
 
         }
 

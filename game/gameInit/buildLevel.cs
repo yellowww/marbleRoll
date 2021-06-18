@@ -24,7 +24,7 @@ public class buildLevel : MonoBehaviour
         parent = GameObject.Find("blockContainer");
         buildContainer = GameObject.Find("buildLevelContainer");
         checkpointContainer = GameObject.Find("checkPoints");
-        build(20);
+        build(35);
     }
 
 
@@ -194,7 +194,7 @@ public class buildLevel : MonoBehaviour
         {
             float[] metaData = getMetaDataFrom(allData[i]);
             positionX[i] = allData[i].transform.position.x + metaData[3];
-            positionY[i] = allData[i].transform.position.y + metaData[4];
+            positionY[i] = allData[i].transform.position.y + metaData[4]+1f;
             positionZ[i] = allData[i].transform.position.z + metaData[5];
         }
         int[] usedIndexes = new int[3];

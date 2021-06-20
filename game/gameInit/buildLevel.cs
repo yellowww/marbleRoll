@@ -6,6 +6,8 @@ public class buildLevel : MonoBehaviour
 {
     // Start is called before the first frame update
     main main;
+    marbleInit marbleInit;
+
     GameObject parent;
     GameObject buildContainer;
     GameObject checkpointContainer;
@@ -21,10 +23,12 @@ public class buildLevel : MonoBehaviour
     {
         
         main = FindObjectOfType<main>();
+        marbleInit = FindObjectOfType<marbleInit>();
+
         parent = GameObject.Find("blockContainer");
         buildContainer = GameObject.Find("buildLevelContainer");
         checkpointContainer = GameObject.Find("checkPoints");
-        build(35);
+        build(15);
     }
 
 
@@ -54,7 +58,7 @@ public class buildLevel : MonoBehaviour
             {
                 lastBlock = GameObject.Find("block" + (currentPeiceI - 1).ToString());
                 float[] lastBlockMeta = getMetaDataFrom(lastBlock);
-                GameObject pieceObject = findBestPiece(8, lastBlock.transform.position.x + lastBlockMeta[3], lastBlock.transform.position.z + lastBlockMeta[5], rotationBuffer);
+                GameObject pieceObject = findBestPiece(4, lastBlock.transform.position.x + lastBlockMeta[3], lastBlock.transform.position.z + lastBlockMeta[5], rotationBuffer);
                 thisBlock = Instantiate(pieceObject, new Vector3(0,0,0), Quaternion.identity);
                 main.allBlocks.Add(thisBlock);
 
@@ -91,7 +95,7 @@ public class buildLevel : MonoBehaviour
 
         main.init(allInitiatedBlocks);
         main.loadingLevel = false;
-
+        marbleInit.initiateMarble();
     }
 
     GameObject findBestPiece(float boundery, float currentX, float currentZ,float rotation)
@@ -205,7 +209,7 @@ public class buildLevel : MonoBehaviour
             Vector3 position = new Vector3(positionX[currentPosition], positionY[currentPosition], positionZ[currentPosition]);
             thisBlock = Instantiate(checkPointPrefab, position, Quaternion.identity);
             thisBlock.transform.parent = checkpointContainer.transform;
-
+            thisBlock.name = "checkpoint";
             objectMovement objectScript = allData[currentPosition].GetComponent<objectMovement>();
 
             string blockType = objectScript.blockType;

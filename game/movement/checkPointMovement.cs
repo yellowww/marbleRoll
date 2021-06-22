@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class checkPointMovement : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void OnTriggerEnter(Collider col)
+    checkPointAnimationInit CPAnimationInit;
+    main main;
+    private void Start()
     {
-        
-        if (col.gameObject.name == "marble")
-        {
-            Destroy(this.gameObject);
-        }
+        CPAnimationInit = FindObjectOfType<checkPointAnimationInit>();
+        main = FindObjectOfType<main>();
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnTriggerEnter(Collider col)
     {
-        
+        if (col.gameObject.name == "marble")
+        {
+            CPAnimationInit.createInstance(this.gameObject);
+            main.checkpoints++;
+        }
     }
 }

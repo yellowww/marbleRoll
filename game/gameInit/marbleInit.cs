@@ -11,7 +11,7 @@ public class marbleInit : MonoBehaviour
     {
         GameObject startingBlock = GameObject.Find("block1");
         float xPos = startingBlock.transform.position.x;
-        float yPos = startingBlock.transform.position.y + 0.5f;
+        float yPos = startingBlock.transform.position.y + 2f;
         float zPos = startingBlock.transform.position.z;
 
         GameObject marble = Instantiate(marblePrefab,new Vector3(xPos,yPos,zPos),Quaternion.identity);

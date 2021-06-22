@@ -19,6 +19,8 @@ public class main : MonoBehaviour
 
     public bool loadingLevel = true;
 
+    public int checkpoints = 0;
+
     public List<GameObject> allBlocks = null;
     void Start()
     {

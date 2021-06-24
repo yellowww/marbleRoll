@@ -14,7 +14,7 @@ public class objectMovement : MonoBehaviour
     float offZ;
     bool thisHotbarHover = false;
     bool doScaleAnimation = false;
-    public Vector3 toScaleValue = new Vector3(0, 0, 0);
+    public Vector3 toScaleValue = new Vector3(1f, 1f, 1f);
 
     public float rotation = 0;
 
@@ -81,7 +81,13 @@ public class objectMovement : MonoBehaviour
         }
         // apply the offsets
         Vector3 alteredWorldPos = new Vector3(worldPos.x + offX, worldPos.y + offY, worldPos.z + offZ);
-        bool foundObject = findCloseObjects(alteredWorldPos);
+        bool foundObject = false;
+        Debug.Log(toScaleValue.x);
+        if(toScaleValue.x == 1f)
+        {
+            foundObject = findCloseObjects(alteredWorldPos);
+        }
+        
         if(!foundObject)
         {
             transform.position = alteredWorldPos;

@@ -164,14 +164,47 @@ public class cameraMovement : MonoBehaviour
 
         if (draggingScale.x == 0.5f)
         {
-            Destroy(mouseUpObject);
-            main.objectsOnScreen--;
-            main.allBlocks.RemoveAt(currentDragingObject - 1);
-            for (int i = currentDragingObject-1; i < main.objectsOnScreen; i++)
-            {
-                main.allBlocks[i].name = "block" + (i+1);
-            }
 
+            destroyBlock(mouseUpObject);
+        }
+    }
+
+    void destroyBlock(GameObject block)
+    {
+
+        clearData(block);
+        Destroy(block);
+        main.objectsOnScreen--;
+        int blockIndex = int.Parse(block.name.Split('k')[1]);
+        main.allBlocks.RemoveAt(blockIndex - 1);
+        for (int i = blockIndex - 1; i < main.objectsOnScreen; i++)
+        {
+            main.allBlocks[i].name = "block" + (i + 1);
+        }
+    }
+
+    void clearData(GameObject block)
+    {
+        objectMovement script = block.GetComponent<objectMovement>();
+        script.endLocks[0] = false;
+        script.endLocks[1] = false;
+        if (script.lockedWith[1] != null)
+        {
+            GameObject attachedFrontObject = script.lockedWith[1];
+            objectMovement attachedScript = attachedFrontObject.GetComponent<objectMovement>();
+            attachedScript.endLocks[0] = false;
+            attachedScript.lockedWith[0] = null;
+            script.lockedWith[1] = null;
+        }
+
+        if (script.lockedWith[0] != null)
+        {
+            GameObject attachedBackObject = script.lockedWith[0];
+            objectMovement attachedScript = attachedBackObject.GetComponent<objectMovement>();
+            attachedScript.endLocks[1] = false;
+            attachedScript.lockedWith[1] = null;
+
+            script.lockedWith[0] = null;
         }
     }
 

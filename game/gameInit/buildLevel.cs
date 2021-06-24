@@ -7,13 +7,14 @@ public class buildLevel : MonoBehaviour
     // Start is called before the first frame update
     main main;
     marbleInit marbleInit;
+    buildLevelEdit buildEditor;
 
     GameObject parent;
     GameObject buildContainer;
     GameObject checkpointContainer;
     public GameObject checkPointPrefab;
-
     public GameObject[] allPrefabs = new GameObject[] { };
+    public GameObject[] allAvaliblePrefabs;
 
     string[] metaIndex = new string[] { "ramp", "rightAngleCurve","leftAngleCurve" };
     //        bx-0  by-1   bz-2   ex-3 ey-4   ez-5   br-6  er-7
@@ -24,11 +25,28 @@ public class buildLevel : MonoBehaviour
         
         main = FindObjectOfType<main>();
         marbleInit = FindObjectOfType<marbleInit>();
+        buildEditor = FindObjectOfType<buildLevelEdit>();
 
         parent = GameObject.Find("blockContainer");
         buildContainer = GameObject.Find("buildLevelContainer");
         checkpointContainer = GameObject.Find("checkPoints");
+
+        loadAvaliblePrefabs();
         build(15);
+    }
+
+    void loadAvaliblePrefabs()
+    {
+        int length = Mathf.RoundToInt(main.levelDificulty);
+        if(length>allPrefabs.Length)
+        {
+            length = allPrefabs.Length;
+        }
+        allAvaliblePrefabs = new GameObject[length];
+        for(int i=0;i<length;i++)
+        {
+            allAvaliblePrefabs[i] = allPrefabs[i];
+        }
     }
 
 
@@ -48,7 +66,7 @@ public class buildLevel : MonoBehaviour
             if (firstLoop)
             {
                 Vector3 position = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
-                thisBlock = Instantiate(allPrefabs[0], position, Quaternion.identity);
+                thisBlock = Instantiate(allAvaliblePrefabs[0], position, Quaternion.identity);
                 thisBlock.name = "block" + currentPeiceI.ToString();
                 thisBlock.transform.parent = parent.transform;
                 main.allBlocks.Add(thisBlock);
@@ -98,7 +116,9 @@ public class buildLevel : MonoBehaviour
         main.objectsOnScreen = currentPeiceI;
         GameObject[] allInitiatedBlocks = getAllInitiatedObjects();
 
+        buildEditor.centerLevel(allInitiatedBlocks);
         placeCheckpoints(allInitiatedBlocks);
+        
 
         main.init(allInitiatedBlocks);
         main.loadingLevel = false;
@@ -111,12 +131,12 @@ public class buildLevel : MonoBehaviour
         {
              float xStabalizer = currentX / Mathf.Abs(currentX);
              float zStabalizer = currentZ / Mathf.Abs(currentZ);
-             float[] xDists = new float[allPrefabs.Length];
-             float[] zDists = new float[allPrefabs.Length];
+             float[] xDists = new float[allAvaliblePrefabs.Length];
+             float[] zDists = new float[allAvaliblePrefabs.Length];
 
-             for (int i=0;i<allPrefabs.Length;i++)
+             for (int i=0;i<allAvaliblePrefabs.Length;i++)
              {
-                 GameObject thisBlock= Instantiate(allPrefabs[i], new Vector3(0, 0, 0), Quaternion.identity);
+                 GameObject thisBlock= Instantiate(allAvaliblePrefabs[i], new Vector3(0, 0, 0), Quaternion.identity);
                  thisBlock.transform.Rotate(new Vector3(0, rotation % 360, 0), Space.Self);
                  thisBlock.transform.parent = buildContainer.transform;
                  float[] thisPieceMeta = getMetaDataFrom(thisBlock);
@@ -129,11 +149,11 @@ public class buildLevel : MonoBehaviour
              bool offX = Mathf.Abs(currentX) > boundery;
              bool offZ = Mathf.Abs(currentZ) > boundery;
 
-             float[] totalOffValue = new float[allPrefabs.Length];
+             float[] totalOffValue = new float[allAvaliblePrefabs.Length];
 
              if(offX && offZ)
              {
-                 for(int i = 0; i < allPrefabs.Length;i++)
+                 for(int i = 0; i < allAvaliblePrefabs.Length;i++)
                  {
                      totalOffValue[i] = xDists[i] * zDists[i];
                  }
@@ -150,12 +170,12 @@ public class buildLevel : MonoBehaviour
             //Debug.Log(totalOffValue[0].ToString() + " strait");
             //Debug.Log(totalOffValue[1].ToString() + " curve");
             //Debug.Log(blockType);
-            GameObject returnObject = allPrefabs[minValues[blockType]];
+            GameObject returnObject = allAvaliblePrefabs[minValues[blockType]];
             return returnObject;
         } else
         {
-            int blockType = Random.Range(0, allPrefabs.Length);
-            return allPrefabs[blockType];
+            int blockType = Random.Range(0, allAvaliblePrefabs.Length);
+            return allAvaliblePrefabs[blockType];
         }
     }
 

@@ -16,7 +16,7 @@ public class main : MonoBehaviour
     public bool inventoryElementHover = false;
     public bool totalInventoryHover = false;
     public bool canCompleateLevel = false;
-
+    public float levelDificulty = 10;
     public bool loadingLevel = true;
 
     public int checkpoints = 0;

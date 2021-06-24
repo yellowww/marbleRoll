@@ -82,7 +82,6 @@ public class objectMovement : MonoBehaviour
         // apply the offsets
         Vector3 alteredWorldPos = new Vector3(worldPos.x + offX, worldPos.y + offY, worldPos.z + offZ);
         bool foundObject = false;
-        Debug.Log(toScaleValue.x);
         if(toScaleValue.x == 1f)
         {
             foundObject = findCloseObjects(alteredWorldPos);

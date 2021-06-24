@@ -49,21 +49,22 @@ public class cameraMovement : MonoBehaviour
 
     void updateMouseInputs()
     {
-        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0 && cameraDistance<30)
+        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0 )
         {
-            cameraDistance += Input.GetAxisRaw("Mouse ScrollWheel") * Time.deltaTime*200;
-            moveCamera();
-        }
-        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0)
-        {
-            if(cameraDistance > 1.5f)
+            if (cameraDistance > 1.5f)
             {
-                cameraDistance += Input.GetAxisRaw("Mouse ScrollWheel") * Time.deltaTime * 200;
-            } else
+                cameraDistance -= Input.GetAxisRaw("Mouse ScrollWheel") * Time.deltaTime * 200;
+            }
+            else
             {
                 cameraDistance = 1.5f;
             }
-            
+            moveCamera();
+        }
+        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0 && cameraDistance < 30)
+        {
+
+            cameraDistance -= Input.GetAxisRaw("Mouse ScrollWheel") * Time.deltaTime * 200;
             moveCamera();
         }
 

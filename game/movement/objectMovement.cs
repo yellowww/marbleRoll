@@ -23,9 +23,9 @@ public class objectMovement : MonoBehaviour
     public float[][] allMeta;
 
     //                             front  back
-    bool[] endLocks = new bool[] { false, false };
+    public bool[] endLocks = new bool[] { false, false };
 
-    GameObject[] lockedWith = new GameObject[] { null, null };
+    public GameObject[] lockedWith = new GameObject[] { null, null };
 
     public bool moveable = true;
 

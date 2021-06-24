@@ -41,6 +41,7 @@ public class buildLevel : MonoBehaviour
         float rotationBuffer = 0;
         float thisRotation;
         objectMovement blockScript;
+        objectMovement lastBlockScript;
         while (currentPeiceI<=targetPeices)
         {
             currentPeiceI++;
@@ -61,8 +62,14 @@ public class buildLevel : MonoBehaviour
                 GameObject pieceObject = findBestPiece(4, lastBlock.transform.position.x + lastBlockMeta[3], lastBlock.transform.position.z + lastBlockMeta[5], rotationBuffer);
                 thisBlock = Instantiate(pieceObject, new Vector3(0,0,0), Quaternion.identity);
                 main.allBlocks.Add(thisBlock);
-
+                
                 blockScript = thisBlock.GetComponent<objectMovement>();
+                lastBlockScript = lastBlock.GetComponent<objectMovement>();
+
+                lastBlockScript.lockedWith[1] = thisBlock;
+                lastBlockScript.endLocks[1] = true;
+                blockScript.lockedWith[0] = lastBlock;
+                blockScript.endLocks[0] = true;
 
                 blockScript.rotation = rotationBuffer % 360;
                 thisBlock.transform.Rotate(new Vector3(0, rotationBuffer % 360, 0), Space.Self);

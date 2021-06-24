@@ -13,12 +13,13 @@ public class buildLevel : MonoBehaviour
     GameObject buildContainer;
     GameObject checkpointContainer;
     public GameObject checkPointPrefab;
+    public GameObject endPrefab;
     public GameObject[] allPrefabs = new GameObject[] { };
     public GameObject[] allAvaliblePrefabs;
 
-    string[] metaIndex = new string[] { "ramp", "rightAngleCurve","leftAngleCurve" };
+    string[] metaIndex = new string[] { "ramp", "rightAngleCurve","leftAngleCurve", "end"};
     //        bx-0  by-1   bz-2   ex-3 ey-4   ez-5   br-6  er-7
-    float[] allMeta = new float[]              {0, 90,-90};
+    float[] allMeta = new float[]              {0, 90,-90,0};
 
     void Start()
     {
@@ -32,7 +33,24 @@ public class buildLevel : MonoBehaviour
         checkpointContainer = GameObject.Find("checkPoints");
 
         loadAvaliblePrefabs();
-        build(15);
+        initiateBuild();
+
+        
+    }
+
+    void initiateBuild()
+    {
+        int maxPieces = Mathf.RoundToInt(main.levelDificulty/7) + 5;
+        if(maxPieces>20)
+        {
+            maxPieces = 20;
+        }
+        int minPeices = Mathf.RoundToInt(main.levelDificulty / 20) + 4;
+        if(minPeices>16)
+        {
+            minPeices = 16;
+        }
+        build(Random.Range(minPeices, maxPieces));
     }
 
     void loadAvaliblePrefabs()
@@ -77,7 +95,14 @@ public class buildLevel : MonoBehaviour
             {
                 lastBlock = GameObject.Find("block" + (currentPeiceI - 1).ToString());
                 float[] lastBlockMeta = getMetaDataFrom(lastBlock);
-                GameObject pieceObject = findBestPiece(4, lastBlock.transform.position.x + lastBlockMeta[3], lastBlock.transform.position.z + lastBlockMeta[5], rotationBuffer);
+                GameObject pieceObject;
+                if (currentPeiceI == targetPeices+1)
+                {
+                    pieceObject = endPrefab;
+                } else {
+                    pieceObject = findBestPiece(4, lastBlock.transform.position.x + lastBlockMeta[3], lastBlock.transform.position.z + lastBlockMeta[5], rotationBuffer);
+                }
+                
                 thisBlock = Instantiate(pieceObject, new Vector3(0,0,0), Quaternion.identity);
                 main.allBlocks.Add(thisBlock);
                 
@@ -256,11 +281,13 @@ public class buildLevel : MonoBehaviour
 
     int getCheckPointPosition(int[] usedIndexes, GameObject[] allData)
     {
-        for(int i=0;i<allData.Length;i++)
+        bool used = false;
+        while(!used)
         {
             int currentPosition = Random.Range(0, allData.Length - 2);
             int usedPosition = System.Array.IndexOf(usedIndexes, currentPosition);
-            if(usedPosition==-1)
+            used = usedPosition == -1;
+            if (used)
             {
                 return currentPosition;
             }
@@ -273,15 +300,43 @@ public class buildLevel : MonoBehaviour
     float[] getMetaDataFrom(GameObject piece)
     {
         float positionModifier = piece.transform.localRotation.eulerAngles.y;
-        GameObject startObject = piece.transform.Find("startPos").gameObject;
-        GameObject endObject = piece.transform.Find("endPos").gameObject;
-        Vector3 startPos = piece.transform.TransformPoint(startObject.transform.position);
-        Vector3 alteredStart = adjustMetaValues(startPos, positionModifier, piece);
+        Transform startTrasform = piece.transform.Find("startPos");
+        GameObject startObject;
+        Transform endTransform = piece.transform.Find("endPos");
+        GameObject endObject;
 
-        Vector3 endPos = piece.transform.TransformPoint(endObject.transform.position);
-        Vector3 alteredEnd = adjustMetaValues(endPos, positionModifier, piece);
+        float startLocator;
+        float endLocator;
+        Vector3 alteredStart;
 
-        float[] meta = new float[6] { (alteredStart.x - piece.transform.position.x), alteredStart.y - piece.transform.position.y, alteredStart.z - piece.transform.position.z, alteredEnd.x - piece.transform.position.x, alteredEnd.y - piece.transform.position.y, alteredEnd.z - piece.transform.position.z };
+        if (startTrasform != null)
+        {
+            startObject = startTrasform.gameObject;
+            Vector3 startPos = piece.transform.TransformPoint(startObject.transform.position);
+            alteredStart = adjustMetaValues(startPos, positionModifier, piece);
+            startLocator = 1f;
+        }
+        else
+        {
+            alteredStart = new Vector3(0, 0, 0);
+            startLocator = 0f;
+        }
+        Vector3 alteredEnd;
+        if (endTransform != null)
+        {
+            endObject = endTransform.gameObject;
+            Vector3 endPos = piece.transform.TransformPoint(endObject.transform.position);
+            alteredEnd = adjustMetaValues(endPos, positionModifier, piece);
+            endLocator = 1f;
+        }
+        else
+        {
+            alteredEnd = new Vector3(0, 0, 0);
+            endLocator = 0f;
+        }
+
+
+        float[] meta = new float[8] { (alteredStart.x - piece.transform.position.x), alteredStart.y - piece.transform.position.y, alteredStart.z - piece.transform.position.z, alteredEnd.x - piece.transform.position.x, alteredEnd.y - piece.transform.position.y, alteredEnd.z - piece.transform.position.z, startLocator, endLocator };
 
         return meta;
     }

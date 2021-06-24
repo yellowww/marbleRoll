@@ -33,10 +33,11 @@ public class objectMovement : MonoBehaviour
     {
         cameraMovementScript = FindObjectOfType<cameraMovement>();
         mainScript = FindObjectOfType<main>();
-        metaIndex = new string[] { "ramp", "rightAngleCurve", "leftAngleCurve" };
+        metaIndex = new string[] { "ramp", "rightAngleCurve", "leftAngleCurve", "end"};
         allMeta = new float[][] { new float[2] {0f, 180f},
                                   new float[2] {0f, -90f },
-                                  new float[2] {0f, 90f } };
+                                  new float[2] {0f, 90f },
+                                  new float[2] {0f, 0f } };
     }
 
     // Update is called once per frame
@@ -161,6 +162,7 @@ public class objectMovement : MonoBehaviour
                 float anglesMatch = 0f;
                 bool endLocksWork = false;
                 bool lockedWithThis = false;
+                bool hasLocators = false;
                 //selected positionMetaData
                 float[] selectedPMetaData = getMetaDataFrom(selectedObject, selectedMovementScript.rotation);
                 //check back of this to front of selected
@@ -171,10 +173,11 @@ public class objectMovement : MonoBehaviour
                 {
                     lockedWithThis = lockedWith[0].name == selectedObject.name && selectedMovementScript.lockedWith[1].name == this.gameObject.name;
                 }
+                hasLocators = thisPMetaData[6] == 1f && selectedPMetaData[7] == 1f;
                 //Debug.Log("thisBack " + endLocks[1].ToString() + ' ' + lockedWith[1]);
                 //Debug.Log("otherFront " + selectedMovementScript.endLocks[0].ToString() + ' ' + selectedMovementScript.lockedWith[0]);
                 //Debug.Log(endLocksWork);
-                if ((anglesMatch==180f || anglesMatch == 540f) && (endLocksWork || lockedWithThis))
+                if ((anglesMatch==180f || anglesMatch == 540f) && (endLocksWork || lockedWithThis) && hasLocators)
                 {
                     
                     float distX = Mathf.Abs((position.x + thisPMetaData[0]) - (selectedObject.transform.position.x + selectedPMetaData[3]));
@@ -203,7 +206,10 @@ public class objectMovement : MonoBehaviour
                 {
                     lockedWithThis = lockedWith[1].name == selectedObject.name && selectedMovementScript.lockedWith[0].name == this.gameObject.name;
                 }
-                if ((anglesMatch == 180f || anglesMatch == 540f) && (endLocksWork || lockedWithThis))
+
+                hasLocators = thisPMetaData[7] == 1f && selectedPMetaData[6] == 1f;
+
+                if ((anglesMatch == 180f || anglesMatch == 540f) && (endLocksWork || lockedWithThis) && hasLocators)
                 {
                     float distX = Mathf.Abs((position.x + thisPMetaData[3]) - (selectedObject.transform.position.x + selectedPMetaData[0]));
                     float distY = Mathf.Abs((position.y + thisPMetaData[4]) - (selectedObject.transform.position.y + selectedPMetaData[1]));
@@ -231,15 +237,43 @@ public class objectMovement : MonoBehaviour
 
     public float[] getMetaDataFrom(GameObject piece, float positionModifier)
     {
-        GameObject startObject = piece.transform.Find("startPos").gameObject;
-        GameObject endObject = piece.transform.Find("endPos").gameObject;
-        Vector3 startPos = piece.transform.TransformPoint(startObject.transform.position);
-        Vector3 alteredStart = adjustMetaValues(startPos, positionModifier, piece);
+        Transform startTrasform = piece.transform.Find("startPos");
+        GameObject startObject;
+        Transform endTransform = piece.transform.Find("endPos");
+        GameObject endObject;
 
-        Vector3 endPos = piece.transform.TransformPoint(endObject.transform.position);
-        Vector3 alteredEnd = adjustMetaValues(endPos, positionModifier, piece);
+        float startLocator;
+        float endLocator;
+        Vector3 alteredStart;
 
-        float[] meta = new float[6] { (alteredStart.x - piece.transform.position.x), alteredStart.y - piece.transform.position.y, alteredStart.z - piece.transform.position.z, alteredEnd.x - piece.transform.position.x, alteredEnd.y - piece.transform.position.y, alteredEnd.z - piece.transform.position.z };
+        if (startTrasform != null)
+        {
+            startObject = startTrasform.gameObject;
+            Vector3 startPos = piece.transform.TransformPoint(startObject.transform.position);
+            alteredStart = adjustMetaValues(startPos, positionModifier, piece);
+            startLocator = 1f;
+        }
+        else
+        {
+            alteredStart = new Vector3(0, 0, 0);
+            startLocator = 0f;
+        }
+        Vector3 alteredEnd;
+        if (endTransform != null)
+        {
+            endObject = endTransform.gameObject;
+            Vector3 endPos = piece.transform.TransformPoint(endObject.transform.position);
+            alteredEnd = adjustMetaValues(endPos, positionModifier, piece);
+            endLocator = 1f;
+        }
+        else
+        {
+            alteredEnd = new Vector3(0, 0, 0);
+            endLocator = 0f;
+        }
+
+
+        float[] meta = new float[8] { (alteredStart.x - piece.transform.position.x), alteredStart.y - piece.transform.position.y, alteredStart.z - piece.transform.position.z, alteredEnd.x - piece.transform.position.x, alteredEnd.y - piece.transform.position.y, alteredEnd.z - piece.transform.position.z, startLocator, endLocator };
 
         return meta;
     }

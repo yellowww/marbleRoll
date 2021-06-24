@@ -202,9 +202,13 @@ public class buildLevel : MonoBehaviour
             positionZ[i] = allData[i].transform.position.z + metaData[5];
         }
         int[] usedIndexes = new int[3];
+        for(int i=0;i<usedIndexes.Length;i++)
+        {
+            usedIndexes[i] = -1;
+        }
         for(int i=0; i<3;i++)
         {
-            int currentPosition = Random.Range(0, allData.Length-2);
+            int currentPosition = getCheckPointPosition(usedIndexes, allData);
             //Debug.Log(currentPosition);
             Vector3 position = new Vector3(positionX[currentPosition], positionY[currentPosition], positionZ[currentPosition]);
             thisBlock = Instantiate(checkPointPrefab, position, Quaternion.identity);
@@ -217,8 +221,24 @@ public class buildLevel : MonoBehaviour
             rotation += allMeta[System.Array.IndexOf(metaIndex, blockType)];
             thisBlock.transform.Rotate(new Vector3(0, rotation % 360, 0), Space.Self);
 
+            usedIndexes[i] = currentPosition;
+
         }
 
+    }
+
+    int getCheckPointPosition(int[] usedIndexes, GameObject[] allData)
+    {
+        for(int i=0;i<allData.Length;i++)
+        {
+            int currentPosition = Random.Range(0, allData.Length - 2);
+            int usedPosition = System.Array.IndexOf(usedIndexes, currentPosition);
+            if(usedPosition==-1)
+            {
+                return currentPosition;
+            }
+        }
+        return 0;
     }
 
 

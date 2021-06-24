@@ -14,6 +14,9 @@ public class cameraMovement : MonoBehaviour
     float lastFrameY;
     float lastXAngle = 0;
     float lastYAngle = 0;
+
+    float cameraDistance = 15;
+
     public bool firstFrame = false;
     public bool dragingObject;
     public int currentDragingObject;
@@ -46,6 +49,23 @@ public class cameraMovement : MonoBehaviour
 
     void updateMouseInputs()
     {
+        if (Input.GetAxisRaw("Mouse ScrollWheel") > 0 && cameraDistance<30)
+        {
+            cameraDistance += Input.GetAxisRaw("Mouse ScrollWheel") * Time.deltaTime*200;
+            moveCamera();
+        }
+        else if (Input.GetAxisRaw("Mouse ScrollWheel") < 0)
+        {
+            if(cameraDistance > 1.5f)
+            {
+                cameraDistance += Input.GetAxisRaw("Mouse ScrollWheel") * Time.deltaTime * 200;
+            } else
+            {
+                cameraDistance = 1.5f;
+            }
+            
+            moveCamera();
+        }
 
         mousePos = Input.mousePosition;
 
@@ -157,9 +177,9 @@ public class cameraMovement : MonoBehaviour
     void moveCamera()
     {
         //set camera position
-        float xMovement = Mathf.Sin((deltaMouseX)/300f) * 15f;
-        float yMovement = Mathf.Sin(((deltaMouseY) / 300f)) * -15f;
-        float zMovement = (Mathf.Cos((deltaMouseX)/300f)* (Mathf.Cos(((deltaMouseY) / 300f)))) * 15f;
+        float xMovement = Mathf.Sin((deltaMouseX)/300f) * cameraDistance;
+        float yMovement = Mathf.Sin(((deltaMouseY) / 300f)) * -cameraDistance;
+        float zMovement = (Mathf.Cos((deltaMouseX)/300f)* (Mathf.Cos(((deltaMouseY) / 300f)))) * cameraDistance;
         
         camera.transform.position = new Vector3(xMovement, yMovement, zMovement);
 

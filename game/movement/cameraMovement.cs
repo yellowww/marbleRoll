@@ -171,15 +171,16 @@ public class cameraMovement : MonoBehaviour
 
     void destroyBlock(GameObject block)
     {
-
+        main mainScript = FindObjectOfType<main>();
         clearData(block);
         Destroy(block);
-        main.objectsOnScreen--;
+        mainScript.objectsOnScreen--;
         int blockIndex = int.Parse(block.name.Split('k')[1]);
-        main.allBlocks.RemoveAt(blockIndex - 1);
-        for (int i = blockIndex - 1; i < main.objectsOnScreen; i++)
+        mainScript.allBlocks.RemoveAt(blockIndex - 1);
+
+        for (int i = blockIndex - 1; i < mainScript.objectsOnScreen; i++)
         {
-            main.allBlocks[i].name = "block" + (i + 1);
+            mainScript.allBlocks[i].name = "block" + (i + 1);
         }
     }
 

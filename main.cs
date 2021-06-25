@@ -30,7 +30,15 @@ public class main : MonoBehaviour
     {
         allBlocks = new List<GameObject>(startingBlocks);
     }
-
+    public void initFromBuild()
+    {
+        GameObject[] startingBlocks = new GameObject[objectsOnScreen];
+        for(int i=0;i<objectsOnScreen;i++)
+        {
+            startingBlocks[i] = GameObject.Find("block" + (i + 1));
+        }
+        allBlocks = new List<GameObject>(startingBlocks);
+    }
     // Update is called once per frame
     void Update()
     {

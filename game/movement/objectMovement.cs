@@ -33,11 +33,12 @@ public class objectMovement : MonoBehaviour
     {
         cameraMovementScript = FindObjectOfType<cameraMovement>();
         mainScript = FindObjectOfType<main>();
-        metaIndex = new string[] { "ramp", "rightAngleCurve", "leftAngleCurve", "end"};
+        metaIndex = new string[] { "ramp", "rightAngleCurve", "leftAngleCurve", "end", "start"};
         allMeta = new float[][] { new float[2] {0f, 180f},
                                   new float[2] {0f, -90f },
                                   new float[2] {0f, 90f },
-                                  new float[2] {0f, 0f } };
+                                  new float[2] {0f, 0f },
+                                  new float[2] {0f,180f} };
     }
 
     // Update is called once per frame

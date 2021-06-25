@@ -8,25 +8,31 @@ public class buildLevel : MonoBehaviour
     main main;
     marbleInit marbleInit;
     buildLevelEdit buildEditor;
+    cameraMovement cameraMovement;
 
     GameObject parent;
     GameObject buildContainer;
     GameObject checkpointContainer;
     public GameObject checkPointPrefab;
+
     public GameObject endPrefab;
+    public GameObject startPrefab;
+
     public GameObject[] allPrefabs = new GameObject[] { };
     public GameObject[] allAvaliblePrefabs;
 
-    string[] metaIndex = new string[] { "ramp", "rightAngleCurve","leftAngleCurve", "end"};
+    string[] metaIndex = new string[] { "ramp", "rightAngleCurve","leftAngleCurve", "end","start"};
     //        bx-0  by-1   bz-2   ex-3 ey-4   ez-5   br-6  er-7
-    float[] allMeta = new float[]              {0, 90,-90,0};
+    float[] allMeta = new float[]              {0, 90,-90,0,0};
 
+    public GameObject[] test;
     void Start()
     {
         
         main = FindObjectOfType<main>();
         marbleInit = FindObjectOfType<marbleInit>();
         buildEditor = FindObjectOfType<buildLevelEdit>();
+        cameraMovement = FindObjectOfType<cameraMovement>();
 
         parent = GameObject.Find("blockContainer");
         buildContainer = GameObject.Find("buildLevelContainer");
@@ -55,7 +61,7 @@ public class buildLevel : MonoBehaviour
 
     void loadAvaliblePrefabs()
     {
-        int length = Mathf.RoundToInt(main.levelDificulty);
+        int length = Mathf.RoundToInt(main.levelDificulty/5);
         if(length>allPrefabs.Length)
         {
             length = allPrefabs.Length;
@@ -84,7 +90,7 @@ public class buildLevel : MonoBehaviour
             if (firstLoop)
             {
                 Vector3 position = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
-                thisBlock = Instantiate(allAvaliblePrefabs[0], position, Quaternion.identity);
+                thisBlock = Instantiate(startPrefab, position, Quaternion.identity);
                 thisBlock.name = "block" + currentPeiceI.ToString();
                 thisBlock.transform.parent = parent.transform;
                 main.allBlocks.Add(thisBlock);
@@ -100,7 +106,7 @@ public class buildLevel : MonoBehaviour
                 {
                     pieceObject = endPrefab;
                 } else {
-                    pieceObject = findBestPiece(4, lastBlock.transform.position.x + lastBlockMeta[3], lastBlock.transform.position.z + lastBlockMeta[5], rotationBuffer);
+                    pieceObject = findBestPiece(8, lastBlock.transform.position.x + lastBlockMeta[3], lastBlock.transform.position.z + lastBlockMeta[5], rotationBuffer);
                 }
                 
                 thisBlock = Instantiate(pieceObject, new Vector3(0,0,0), Quaternion.identity);
@@ -143,9 +149,13 @@ public class buildLevel : MonoBehaviour
 
         buildEditor.centerLevel(allInitiatedBlocks);
         placeCheckpoints(allInitiatedBlocks);
-        
 
         main.init(allInitiatedBlocks);
+        main.allBlocks = removeBlocks(allInitiatedBlocks);
+
+
+        
+        
         main.loadingLevel = false;
         marbleInit.initiateMarble();
     }
@@ -192,9 +202,6 @@ public class buildLevel : MonoBehaviour
 
             int[] minValues = getMin(totalOffValue);
             int blockType = Random.Range(0, minValues.Length);
-            //Debug.Log(totalOffValue[0].ToString() + " strait");
-            //Debug.Log(totalOffValue[1].ToString() + " curve");
-            //Debug.Log(blockType);
             GameObject returnObject = allAvaliblePrefabs[minValues[blockType]];
             return returnObject;
         } else
@@ -234,6 +241,7 @@ public class buildLevel : MonoBehaviour
         for(int i=1;i<=main.objectsOnScreen;i++)
         {
             allObjects[i-1] = GameObject.Find("block" + i);
+           
         }
         return allObjects;
     }
@@ -260,7 +268,7 @@ public class buildLevel : MonoBehaviour
         }
         for(int i=0; i<3;i++)
         {
-            int currentPosition = getCheckPointPosition(usedIndexes, allData);
+            int currentPosition = getRandomPosition(usedIndexes, allData.Length-2);
             //Debug.Log(currentPosition);
             Vector3 position = new Vector3(positionX[currentPosition], positionY[currentPosition], positionZ[currentPosition]);
             thisBlock = Instantiate(checkPointPrefab, position, Quaternion.identity);
@@ -279,12 +287,12 @@ public class buildLevel : MonoBehaviour
 
     }
 
-    int getCheckPointPosition(int[] usedIndexes, GameObject[] allData)
+    int getRandomPosition(int[] usedIndexes, int length)
     {
         bool used = false;
         while(!used)
         {
-            int currentPosition = Random.Range(0, allData.Length - 2);
+            int currentPosition = Random.Range(0, length);
             int usedPosition = System.Array.IndexOf(usedIndexes, currentPosition);
             used = usedPosition == -1;
             if (used)
@@ -294,6 +302,73 @@ public class buildLevel : MonoBehaviour
         }
         return 0;
     }
+
+    List<GameObject> removeBlocks(GameObject[] blocks)
+    {
+        int length = blocks.Length;
+        int minDeleted = Mathf.RoundToInt(main.levelDificulty / 10);
+        int maxDeleted = Mathf.RoundToInt(main.levelDificulty / 5);
+        int deleted = Random.Range(minDeleted,maxDeleted);
+        
+        if(deleted>length-2)
+        {
+            deleted = length-2;
+        }
+        int[] usedIndexes = new int[deleted];
+
+        List<GameObject> remainingBlocks = new List<GameObject>(blocks);
+        for (int i=0;i<deleted;i++)
+        {
+            int deleteIndex = getRandomPosition(usedIndexes, blocks.Length - 1);
+            usedIndexes[i] = deleteIndex;
+
+            remainingBlocks.Remove(blocks[deleteIndex]);
+            destroyBlock(blocks[deleteIndex]);
+
+        }
+
+        return remainingBlocks;
+    }
+    void destroyBlock(GameObject block)
+    {
+        main mainScript = FindObjectOfType<main>();
+        clearData(block);
+        Destroy(block);
+        mainScript.objectsOnScreen--;
+        int blockIndex = int.Parse(block.name.Split('k')[1]);
+        mainScript.allBlocks.RemoveAt(blockIndex - 1);
+
+        for (int i = blockIndex - 1; i < mainScript.objectsOnScreen; i++)
+        {
+            mainScript.allBlocks[i].name = "block" + (i + 1);
+        }
+    }
+
+    void clearData(GameObject block)
+    {
+        objectMovement script = block.GetComponent<objectMovement>();
+        script.endLocks[0] = false;
+        script.endLocks[1] = false;
+        if (script.lockedWith[1] != null)
+        {
+            GameObject attachedFrontObject = script.lockedWith[1];
+            objectMovement attachedScript = attachedFrontObject.GetComponent<objectMovement>();
+            attachedScript.endLocks[0] = false;
+            attachedScript.lockedWith[0] = null;
+            script.lockedWith[1] = null;
+        }
+
+        if (script.lockedWith[0] != null)
+        {
+            GameObject attachedBackObject = script.lockedWith[0];
+            objectMovement attachedScript = attachedBackObject.GetComponent<objectMovement>();
+            attachedScript.endLocks[1] = false;
+            attachedScript.lockedWith[1] = null;
+
+            script.lockedWith[0] = null;
+        }
+    }
+
 
 
 

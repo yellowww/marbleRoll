@@ -38,13 +38,23 @@ public class cameraMovement : MonoBehaviour
         if(!main.loadingLevel)
         {
             updateMouseInputs();
+            
         }
-        
+        setScrollMin();
+
     }
 
     bool canDrag()
     {
         return !main.GUIClick && !main.hotbarGUIHover;
+    }
+
+    void setScrollMin()
+    {
+        if(cameraDistance<1.5f)
+        {
+            cameraDistance = 1.5f;
+        }
     }
 
     void updateMouseInputs()
@@ -86,12 +96,21 @@ public class cameraMovement : MonoBehaviour
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out hit)) {
-                firstFrame = true;
-                dragingObject = true;
+                
                 GameObject hitObject = findParent(hit.collider.gameObject);
-                string[] dragingIndex = hitObject.name.Split('k');
-                currentDragingObject = int.Parse(dragingIndex[1]);
-                main.selectedObject = hitObject;
+                if (hitObject != null)
+                {
+                    objectMovement objectScript = hitObject.GetComponent<objectMovement>();
+
+                    if (objectScript.moveable && !main.inPlayMode)
+                    {
+                        firstFrame = true;
+                        dragingObject = true;
+                        string[] dragingIndex = hitObject.name.Split('k');
+                        currentDragingObject = int.Parse(dragingIndex[1]);
+                        main.selectedObject = hitObject;
+                    }
+                }
             }
         }
         if (Input.GetMouseButton(0) && canDrag())
@@ -228,6 +247,10 @@ public class cameraMovement : MonoBehaviour
         while(currentParent.transform.parent.gameObject.name != "blockContainer")
         {
             currentParent = currentParent.transform.parent.gameObject;
+            if(currentParent.transform.parent == null)
+            {
+                return null;
+            }
         }
         return currentParent;
     }

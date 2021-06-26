@@ -93,8 +93,10 @@ public class buildLevel : MonoBehaviour
                 thisBlock = Instantiate(startPrefab, position, Quaternion.identity);
                 thisBlock.name = "block" + currentPeiceI.ToString();
                 thisBlock.transform.parent = parent.transform;
-                main.allBlocks.Add(thisBlock);
+                // main.allBlocks.Add(thisBlock);
 
+                blockScript = thisBlock.GetComponent<objectMovement>();
+                blockScript.moveable = false;
                 firstLoop = false;
             }
             else
@@ -114,6 +116,9 @@ public class buildLevel : MonoBehaviour
                 
                 blockScript = thisBlock.GetComponent<objectMovement>();
                 lastBlockScript = lastBlock.GetComponent<objectMovement>();
+
+                blockScript.moveable = false;
+
 
                 lastBlockScript.lockedWith[1] = thisBlock;
                 lastBlockScript.endLocks[1] = true;

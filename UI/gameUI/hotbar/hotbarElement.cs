@@ -45,7 +45,7 @@ public class hotbarElement : MonoBehaviour
 
     public void OnMouseDown()
     {
-        if(!main.hotbarGUIHover)
+        if(!main.hotbarGUIHover && !main.inPlayMode)
         {
             main.hotbarGUIHover = true;
             GameObject newBlock = Instantiate(prefab, new Vector3(0, 0, 0), Quaternion.identity);

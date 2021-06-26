@@ -19,6 +19,8 @@ public class main : MonoBehaviour
     public float levelDificulty = 10;
     public bool loadingLevel = true;
 
+    public bool inPlayMode = false;
+
     public int checkpoints = 0;
 
     public List<GameObject> allBlocks = null;

@@ -162,7 +162,6 @@ public class buildLevel : MonoBehaviour
         
         
         main.loadingLevel = false;
-        marbleInit.initiateMarble();
     }
 
     GameObject findBestPiece(float boundery, float currentX, float currentZ,float rotation)

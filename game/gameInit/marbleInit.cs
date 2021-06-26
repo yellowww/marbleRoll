@@ -19,4 +19,13 @@ public class marbleInit : MonoBehaviour
         marble.transform.parent = parent.transform;
     }
 
+    public void removeMarbles()
+    {
+        foreach (Transform child in parent.transform)
+        {
+            GameObject obj = child.gameObject;
+            Destroy(obj);
+        }
+    }
+
 }

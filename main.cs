@@ -23,6 +23,10 @@ public class main : MonoBehaviour
 
     public int checkpoints = 0;
 
+    public bool inBetweenLevel = true;
+
+    public float levelSize;
+
     public List<GameObject> allBlocks = null;
     void Start()
     {

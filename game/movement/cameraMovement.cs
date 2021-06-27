@@ -46,7 +46,7 @@ public class cameraMovement : MonoBehaviour
 
     bool canDrag()
     {
-        return !main.GUIClick && !main.hotbarGUIHover;
+        return !main.GUIClick && !main.hotbarGUIHover && !main.inBetweenLevel;
     }
 
     void setScrollMin()
@@ -230,15 +230,18 @@ public class cameraMovement : MonoBehaviour
 
     void moveCamera()
     {
-        //set camera position
-        float xMovement = Mathf.Sin((deltaMouseX)/300f) * cameraDistance;
-        float yMovement = Mathf.Sin(((deltaMouseY) / 300f)) * -cameraDistance;
-        float zMovement = (Mathf.Cos((deltaMouseX)/300f)* (Mathf.Cos(((deltaMouseY) / 300f)))) * cameraDistance;
-        
-        camera.transform.position = new Vector3(xMovement, yMovement, zMovement);
+        if (!main.inBetweenLevel)
+        {
+            //set camera position
+            float xMovement = Mathf.Sin((deltaMouseX) / 300f) * cameraDistance;
+            float yMovement = Mathf.Sin(((deltaMouseY) / 300f)) * -cameraDistance;
+            float zMovement = (Mathf.Cos((deltaMouseX) / 300f) * (Mathf.Cos(((deltaMouseY) / 300f)))) * cameraDistance;
 
-        //rotate camera
-        camera.transform.LookAt(blockContainer.transform);
+            camera.transform.position = new Vector3(xMovement, yMovement, zMovement);
+
+            //rotate camera
+            camera.transform.LookAt(blockContainer.transform);
+        }
     }
 
     public GameObject findParent(GameObject startObject)

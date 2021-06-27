@@ -6,13 +6,17 @@ public class buildLevelEdit : MonoBehaviour
 {
     public Material initBlockColor;
     main main;
+    
    
     void Start()
     {
         main = FindObjectOfType<main>();
+        
     }
 
     public void centerLevel(GameObject[] array) {
+        main = FindObjectOfType<main>();
+
         float[] allXPos = getPropertyArray(array, 0);
         float xMin = getMin(allXPos);
         float xMax = getMax(allXPos);
@@ -27,6 +31,20 @@ public class buildLevelEdit : MonoBehaviour
         float zMin = getMin(allZPos);
         float zMax = getMax(allZPos);
         float zMove = (zMax + zMin)/-2;
+
+        if (zMove < yMove && zMove < xMove)
+        {
+            Debug.Log('z');
+            main.levelSize = zMove * -2;
+        } else if(yMove < zMove && yMove < xMove)
+        {
+            Debug.Log('y');
+            main.levelSize = yMove * -2;
+        } else
+        {
+            Debug.Log('z');
+            main.levelSize = xMove * -2;
+        }
 
         moveAllBlocks(array, new Vector3(xMove, yMove, zMove));
 

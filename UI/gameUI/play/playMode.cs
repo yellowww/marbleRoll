@@ -28,13 +28,17 @@ public class playMode : MonoBehaviour
 
     public void exitPlayMode()
     {
-        main.inPlayMode = false;
-        marbleInit.removeMarbles();
-        this.gameObject.GetComponent<Image>().sprite = playButton;
-        shadeUI(255);
+        if(!main.inBetweenLevel)
+        {
+            main.inPlayMode = false;
+            marbleInit.removeMarbles();
+            this.gameObject.GetComponent<Image>().sprite = playButton;
+            shadeUI(255);
+        }
+
     }
 
-    void shadeUI(byte a)
+    public void shadeUI(byte a)
     {
         GameObject thisObject;
         Color thisColor = new Color32(255, 255, 255, a);

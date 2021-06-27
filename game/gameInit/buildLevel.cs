@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class buildLevel : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class buildLevel : MonoBehaviour
     marbleInit marbleInit;
     buildLevelEdit buildEditor;
     cameraMovement cameraMovement;
+    playMode playMode;
 
     GameObject parent;
     GameObject buildContainer;
@@ -33,6 +35,7 @@ public class buildLevel : MonoBehaviour
         marbleInit = FindObjectOfType<marbleInit>();
         buildEditor = FindObjectOfType<buildLevelEdit>();
         cameraMovement = FindObjectOfType<cameraMovement>();
+        playMode = FindObjectOfType<playMode>();
 
         parent = GameObject.Find("blockContainer");
         buildContainer = GameObject.Find("buildLevelContainer");
@@ -61,7 +64,11 @@ public class buildLevel : MonoBehaviour
 
     void loadAvaliblePrefabs()
     {
-        int length = Mathf.RoundToInt(main.levelDificulty/5);
+        int length = Mathf.RoundToInt(main.levelDificulty / 5);
+        if (length < 1)
+        {
+            length = 1;
+        }
         if(length>allPrefabs.Length)
         {
             length = allPrefabs.Length;
@@ -159,9 +166,19 @@ public class buildLevel : MonoBehaviour
         main.allBlocks = removeBlocks(allInitiatedBlocks);
 
         buildEditor.shadeInitBlocks(blockListToArray(main.allBlocks));
-        
-        
+
+        main.inBetweenLevel = false;
         main.loadingLevel = false;
+        playMode.shadeUI(255);
+        showPlayButton();
+    }
+
+
+    void showPlayButton()
+    {
+        GameObject PlayButton = GameObject.Find("playButton");
+        Color color = new Color32(255, 255, 255, 255);
+        PlayButton.GetComponent<Image>().color = color;
     }
 
     GameObject[] blockListToArray(List<GameObject> list)
@@ -323,6 +340,11 @@ public class buildLevel : MonoBehaviour
         int minDeleted = Mathf.RoundToInt(main.levelDificulty / 10);
         int maxDeleted = Mathf.RoundToInt(main.levelDificulty / 5);
         int deleted = Random.Range(minDeleted,maxDeleted);
+
+        if(deleted<1)
+        {
+            deleted = 1;
+        }
         
         if(deleted>length-2)
         {

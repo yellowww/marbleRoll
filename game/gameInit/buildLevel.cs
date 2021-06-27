@@ -158,10 +158,20 @@ public class buildLevel : MonoBehaviour
         main.init(allInitiatedBlocks);
         main.allBlocks = removeBlocks(allInitiatedBlocks);
 
-
+        buildEditor.shadeInitBlocks(blockListToArray(main.allBlocks));
         
         
         main.loadingLevel = false;
+    }
+
+    GameObject[] blockListToArray(List<GameObject> list)
+    {
+        GameObject[] array = new GameObject[list.Count];
+        for(int i=0;i<list.Count;i++)
+        {
+            array[i] = list[i];
+        }
+        return array;
     }
 
     GameObject findBestPiece(float boundery, float currentX, float currentZ,float rotation)

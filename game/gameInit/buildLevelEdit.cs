@@ -4,17 +4,12 @@ using UnityEngine;
 
 public class buildLevelEdit : MonoBehaviour
 {
-    // Start is called before the first frame update
-
-    // Update is called once per frame
+    public Material initBlockColor;
     main main;
-    private void Start()
+   
+    void Start()
     {
         main = FindObjectOfType<main>();
-    }
-    void Update()
-    {
-        
     }
 
     public void centerLevel(GameObject[] array) {
@@ -81,4 +76,48 @@ public class buildLevelEdit : MonoBehaviour
     }
 
 
+    public void shadeInitBlocks(GameObject[] allBlocks)
+    {
+        for(int i=0;i<allBlocks.Length;i++)
+        {
+
+            GameObject[] children = getAllChildren(allBlocks[i]);
+            for(int i2 = 0;i2<children.Length;i2++)
+            {
+                GameObject obj = children[i2];
+                if (obj.GetComponent<MeshRenderer>())
+                {
+                    obj.GetComponent<MeshRenderer>().material = initBlockColor;
+                }
+            }
+        }
+    }
+
+    void getChildren(GameObject gameObject, List<GameObject> list)
+    {
+        foreach(Transform child in gameObject.transform)
+        {
+            list.Add(child.gameObject);
+        }
+    }
+
+    GameObject[] getAllChildren(GameObject thisObject)
+    {
+        List<GameObject> childrenList = new List<GameObject>();
+        childrenList.Add(thisObject);
+        int i = 0;
+        while(i<childrenList.Count)
+        {
+            getChildren(childrenList[i], childrenList);
+            i++;
+        }
+
+
+        GameObject[] childrenArray = new GameObject[childrenList.Count];
+        for(i=0;i<childrenList.Count;i++)
+        {
+            childrenArray[i] = childrenList[i];
+        }
+        return childrenArray;
+    }
 }

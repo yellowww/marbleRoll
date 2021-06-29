@@ -17,7 +17,7 @@ public class main : MonoBehaviour
     public bool totalInventoryHover = false;
     public bool canCompleateLevel = false;
     
-    public bool loadingLevel = true;
+    public bool loadingLevel = false;
 
     public bool inPlayMode = false;
 

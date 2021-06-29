@@ -41,14 +41,15 @@ public class buildLevel : MonoBehaviour
         buildContainer = GameObject.Find("buildLevelContainer");
         checkpointContainer = GameObject.Find("checkPoints");
 
-        loadAvaliblePrefabs();
+        
         initiateBuild();
 
         
     }
 
-    void initiateBuild()
+    public void initiateBuild()
     {
+        loadAvaliblePrefabs();
         int maxPieces = Mathf.RoundToInt(main.levelDificulty/7) + 5;
         if(maxPieces>20)
         {
@@ -83,6 +84,7 @@ public class buildLevel : MonoBehaviour
 
     public void build(int targetPeices)
     {
+        main.loadingLevel = true;
         int currentPeiceI = 0;
         bool firstLoop = true;
         GameObject lastBlock;
@@ -91,12 +93,13 @@ public class buildLevel : MonoBehaviour
         float thisRotation;
         objectMovement blockScript;
         objectMovement lastBlockScript;
+        GameObject[] allInitiatedBlocks = new GameObject[targetPeices+1];
         while (currentPeiceI<=targetPeices)
         {
             currentPeiceI++;
             if (firstLoop)
             {
-                Vector3 position = new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), Random.Range(-5f, 5f));
+                Vector3 position = new Vector3(0,0,0);
                 thisBlock = Instantiate(startPrefab, position, Quaternion.identity);
                 thisBlock.name = "block" + currentPeiceI.ToString();
                 thisBlock.transform.parent = parent.transform;
@@ -105,6 +108,8 @@ public class buildLevel : MonoBehaviour
                 blockScript = thisBlock.GetComponent<objectMovement>();
                 blockScript.moveable = false;
                 firstLoop = false;
+
+                allInitiatedBlocks[currentPeiceI - 1] = thisBlock;
             }
             else
             {
@@ -152,12 +157,12 @@ public class buildLevel : MonoBehaviour
                 thisBlock.name = "block" + currentPeiceI.ToString();
                 thisBlock.transform.parent = parent.transform;
 
-                
+                allInitiatedBlocks[currentPeiceI - 1] = thisBlock;
 
             }
         }
         main.objectsOnScreen = currentPeiceI;
-        GameObject[] allInitiatedBlocks = getAllInitiatedObjects();
+        
 
         buildEditor.centerLevel(allInitiatedBlocks);
         placeCheckpoints(allInitiatedBlocks);
@@ -175,6 +180,9 @@ public class buildLevel : MonoBehaviour
 
         GameObject levelText = GameObject.Find("endLevelText");
         levelText.GetComponent<Text>().enabled = false;
+
+        Image nextButton = GameObject.Find("continueButton").GetComponent<Image>();
+        nextButton.enabled = false;
     }
 
 
@@ -349,7 +357,7 @@ public class buildLevel : MonoBehaviour
         {
             deleted = 1;
         }
-        
+        deleted = 0;
         if(deleted>length-2)
         {
             deleted = length-2;

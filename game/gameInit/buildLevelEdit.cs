@@ -37,15 +37,12 @@ public class buildLevelEdit : MonoBehaviour
 
         if (zWid > yWid && zWid > xWid)
         {
-            //Debug.Log('z');
             main.levelSize = zWid;
         } else if(yWid > zWid && yWid > xWid)
         {
-            //Debug.Log('y');
             main.levelSize = yWid;
         } else
         {
-            //Debug.Log('z');
             main.levelSize = xWid;
         }
 

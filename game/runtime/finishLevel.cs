@@ -26,6 +26,9 @@ public class finishLevel : MonoBehaviour
             main.currentLevel++;
             main.levelDificulty += 5 / (main.currentLevel / 5 + 1);
             textComponent.enabled = true;
+
+            Image nextButton = GameObject.Find("continueButton").GetComponent<Image>();
+            nextButton.enabled = true;
         }
     }
 

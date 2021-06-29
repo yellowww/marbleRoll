@@ -19,6 +19,13 @@ public class finishLevel : MonoBehaviour
             main.inBetweenLevel = true;
             playMode.shadeUI(0);
             hidePlayButton();
+
+            GameObject text = GameObject.Find("endLevelText");
+            Text textComponent = text.GetComponent<Text>();
+            textComponent.text = "Level " + main.currentLevel.ToString() + " Completed!";
+            main.currentLevel++;
+            main.levelDificulty += 5 / (main.currentLevel / 5 + 1);
+            textComponent.enabled = true;
         }
     }
 

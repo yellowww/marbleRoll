@@ -20,8 +20,8 @@ public class rotation : MonoBehaviour
             {
                 objectMovement movementScript = main.selectedObject.GetComponent<objectMovement>();
 
-                movementScript.rotation = (movementScript.rotation - 90) % 360;
-                main.selectedObject.transform.Rotate(new Vector3(0, -90, 0), Space.Self);
+                movementScript.rotation = (movementScript.rotation + 90) % 360;
+                main.selectedObject.transform.Rotate(new Vector3(0, 90, 0), Space.Self);
             }
         }
 
@@ -34,8 +34,8 @@ public class rotation : MonoBehaviour
             {
                 objectMovement movementScript = main.selectedObject.GetComponent<objectMovement>();
 
-                movementScript.rotation = (movementScript.rotation + 90) % 360;
-                main.selectedObject.transform.Rotate(new Vector3(0, 90, 0), Space.Self);
+                movementScript.rotation = (movementScript.rotation - 90) % 360;
+                main.selectedObject.transform.Rotate(new Vector3(0, -90, 0), Space.Self);
             }       
         }
 

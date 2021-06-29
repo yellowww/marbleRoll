@@ -167,10 +167,14 @@ public class buildLevel : MonoBehaviour
 
         buildEditor.shadeInitBlocks(blockListToArray(main.allBlocks));
 
+        main.doEndCheckPointAnimations = false;
         main.inBetweenLevel = false;
         main.loadingLevel = false;
         playMode.shadeUI(255);
         showPlayButton();
+
+        GameObject levelText = GameObject.Find("endLevelText");
+        levelText.GetComponent<Text>().enabled = false;
     }
 
 

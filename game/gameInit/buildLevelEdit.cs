@@ -21,29 +21,32 @@ public class buildLevelEdit : MonoBehaviour
         float xMin = getMin(allXPos);
         float xMax = getMax(allXPos);
         float xMove = (xMax + xMin)/-2;
+        float xWid = Mathf.Abs(xMax - xMin);
 
         float[] allYPos = getPropertyArray(array, 1);
         float yMin = getMin(allYPos);
         float yMax = getMax(allYPos);
         float yMove = (yMax + yMin)/-2;
+        float yWid = Mathf.Abs(yMax - yMin);
 
         float[] allZPos = getPropertyArray(array, 2);
         float zMin = getMin(allZPos);
         float zMax = getMax(allZPos);
         float zMove = (zMax + zMin)/-2;
+        float zWid = Mathf.Abs(zMax - zMin);
 
-        if (zMove < yMove && zMove < xMove)
+        if (zWid > yWid && zWid > xWid)
         {
-            Debug.Log('z');
-            main.levelSize = zMove * -2;
-        } else if(yMove < zMove && yMove < xMove)
+            //Debug.Log('z');
+            main.levelSize = zWid;
+        } else if(yWid > zWid && yWid > xWid)
         {
-            Debug.Log('y');
-            main.levelSize = yMove * -2;
+            //Debug.Log('y');
+            main.levelSize = yWid;
         } else
         {
-            Debug.Log('z');
-            main.levelSize = xMove * -2;
+            //Debug.Log('z');
+            main.levelSize = xWid;
         }
 
         moveAllBlocks(array, new Vector3(xMove, yMove, zMove));

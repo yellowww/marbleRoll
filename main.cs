@@ -16,7 +16,7 @@ public class main : MonoBehaviour
     public bool inventoryElementHover = false;
     public bool totalInventoryHover = false;
     public bool canCompleateLevel = false;
-    public float levelDificulty = 10;
+    
     public bool loadingLevel = true;
 
     public bool inPlayMode = false;
@@ -26,6 +26,11 @@ public class main : MonoBehaviour
     public bool inBetweenLevel = true;
 
     public float levelSize;
+
+    public bool doEndCheckPointAnimations = false;
+
+    public float levelDificulty = 10;
+    public int currentLevel = 1;
 
     public List<GameObject> allBlocks = null;
     void Start()

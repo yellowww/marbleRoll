@@ -15,13 +15,15 @@ public class buildLevel : MonoBehaviour
     GameObject parent;
     GameObject buildContainer;
     GameObject checkpointContainer;
-    public GameObject checkPointPrefab;
 
+    public GameObject checkPointPrefab;
     public GameObject endPrefab;
     public GameObject startPrefab;
+    public Sprite playButtonSprite;
 
     public GameObject[] allPrefabs = new GameObject[] { };
     public GameObject[] allAvaliblePrefabs;
+
 
     string[] metaIndex = new string[] { "ramp", "rightAngleCurve","leftAngleCurve", "end","start"};
     //        bx-0  by-1   bz-2   ex-3 ey-4   ez-5   br-6  er-7
@@ -94,6 +96,9 @@ public class buildLevel : MonoBehaviour
         objectMovement blockScript;
         objectMovement lastBlockScript;
         GameObject[] allInitiatedBlocks = new GameObject[targetPeices+1];
+
+        GameObject.Find("blockContainer").transform.position = new Vector3(0, 0, 0);
+
         while (currentPeiceI<=targetPeices)
         {
             currentPeiceI++;
@@ -101,7 +106,7 @@ public class buildLevel : MonoBehaviour
             {
                 Vector3 position = new Vector3(0,0,0);
                 thisBlock = Instantiate(startPrefab, position, Quaternion.identity);
-                thisBlock.name = "block" + currentPeiceI.ToString();
+                thisBlock.name = "block1";
                 thisBlock.transform.parent = parent.transform;
                 // main.allBlocks.Add(thisBlock);
 
@@ -161,22 +166,38 @@ public class buildLevel : MonoBehaviour
 
             }
         }
-        main.objectsOnScreen = currentPeiceI;
-        
+        finishLoad(allInitiatedBlocks,currentPeiceI);
+    }
 
-        buildEditor.centerLevel(allInitiatedBlocks);
+    void finishLoad(GameObject[] allInitiatedBlocks, int currentPeiceI)
+    {
+        main.objectsOnScreen = currentPeiceI;
+        main.init(allInitiatedBlocks);
+
+        Vector3 centerPosition = buildEditor.centerLevel(allInitiatedBlocks);
+        GameObject.Find("blockContainer").transform.position = centerPosition;
+
         placeCheckpoints(allInitiatedBlocks);
 
-        main.init(allInitiatedBlocks);
         main.allBlocks = removeBlocks(allInitiatedBlocks);
 
         buildEditor.shadeInitBlocks(blockListToArray(main.allBlocks));
+
+        Camera.main.transform.position = new Vector3(0, 0, 15);
+        cameraMovement.cameraDistance = 15;
+        cameraMovement.lastXAngle = 0f;
+        cameraMovement.lastYAngle = 0f;
+        Camera.main.transform.eulerAngles = new Vector3(0, -180, 0);
+
 
         main.doEndCheckPointAnimations = false;
         main.inBetweenLevel = false;
         main.loadingLevel = false;
         playMode.shadeUI(255);
         showPlayButton();
+
+        GameObject playButton = GameObject.Find("playButton");
+        playButton.GetComponent<Image>().sprite = playButtonSprite;
 
         GameObject levelText = GameObject.Find("endLevelText");
         levelText.GetComponent<Text>().enabled = false;
@@ -357,7 +378,6 @@ public class buildLevel : MonoBehaviour
         {
             deleted = 1;
         }
-        deleted = 0;
         if(deleted>length-2)
         {
             deleted = length-2;
@@ -383,6 +403,7 @@ public class buildLevel : MonoBehaviour
         clearData(block);
         Destroy(block);
         mainScript.objectsOnScreen--;
+        Debug.Log(main.objectsOnScreen);
         int blockIndex = int.Parse(block.name.Split('k')[1]);
         mainScript.allBlocks.RemoveAt(blockIndex - 1);
 

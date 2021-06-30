@@ -14,9 +14,10 @@ public class buildLevelEdit : MonoBehaviour
         
     }
 
-    public void centerLevel(GameObject[] array) {
-        main = FindObjectOfType<main>();
 
+
+     public Vector3 centerLevel(GameObject[] array) {
+        main = FindObjectOfType<main>();
         float[] allXPos = getPropertyArray(array, 0);
         float xMin = getMin(allXPos);
         float xMax = getMax(allXPos);
@@ -34,7 +35,6 @@ public class buildLevelEdit : MonoBehaviour
         float zMax = getMax(allZPos);
         float zMove = (zMax + zMin)/-2;
         float zWid = Mathf.Abs(zMax - zMin);
-
         if (zWid > yWid && zWid > xWid)
         {
             main.levelSize = zWid;
@@ -45,15 +45,18 @@ public class buildLevelEdit : MonoBehaviour
         {
             main.levelSize = xWid;
         }
-
-        moveAllBlocks(array, new Vector3(xMove, yMove, zMove));
+        return new Vector3(xMove, yMove, zMove);
+        
 
     }
 
-    void moveAllBlocks(GameObject[] blocks, Vector3 position)
+    public void moveAllBlocks(GameObject[] blocks, Vector3 position)
     {
-        for(int i=0;i<blocks.Length;i++)
+
+        for (int i = 0; i < blocks.Length; i++)
         {
+            Debug.Log(blocks[i].name.ToString() + ' ' + blocks[i].transform.position.ToString());
+            Debug.Log(blocks[i].name.ToString() + ' ' + position.ToString());
             blocks[i].transform.position += position;
         }
     }

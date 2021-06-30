@@ -12,10 +12,10 @@ public class cameraMovement : MonoBehaviour
     float deltaMouseY;
     float lastFrameX;
     float lastFrameY;
-    float lastXAngle = 0;
-    float lastYAngle = 0;
+    public float lastXAngle = 0;
+    public float lastYAngle = 0;
 
-    float cameraDistance = 15;
+    public float cameraDistance = 15;
 
     public bool firstFrame = false;
     public bool dragingObject;
@@ -240,7 +240,7 @@ public class cameraMovement : MonoBehaviour
             camera.transform.position = new Vector3(xMovement, yMovement, zMovement);
 
             //rotate camera
-            camera.transform.LookAt(blockContainer.transform);
+            camera.transform.LookAt(Vector3.zero);
         }
     }
 

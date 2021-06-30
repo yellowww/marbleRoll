@@ -23,6 +23,7 @@ public class prepNextLevel : MonoBehaviour
             main.checkpoints = 0;
             main.inBetweenLevel = false;
             main.inPlayMode = false;
+            main.canCompleateLevel = false;
             buildLevel.initiateBuild();
         }
     }

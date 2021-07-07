@@ -48,6 +48,17 @@ public class playMode : MonoBehaviour
         thisObject = GameObject.Find("rotateRight");
         thisObject.GetComponent<Image>().color = thisColor;
 
+        thisObject = GameObject.Find("hintButton");
+        if(a==0)
+        {
+            thisObject.GetComponent<Image>().color = thisColor;
+        } else
+        {
+            thisObject.GetComponent<Image>().color = thisColor;
+        }
+        
+
+
         thisObject = GameObject.Find("hotbarCanvas");
         foreach (Transform child in thisObject.transform)
         {
@@ -55,6 +66,8 @@ public class playMode : MonoBehaviour
             obj.GetComponent<Image>().color = thisColor;
         }
     }
+
+
 
    
 

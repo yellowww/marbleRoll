@@ -24,7 +24,7 @@ public class finishLevel : MonoBehaviour
             Text textComponent = text.GetComponent<Text>();
             textComponent.text = "Level " + main.currentLevel.ToString() + " Completed!";
             main.currentLevel++;
-            main.levelDificulty += 5 / (main.currentLevel / 5 + 1);
+            main.levelDificulty += 5f / (main.currentLevel / 5f + 1f);
             textComponent.enabled = true;
 
             Image nextButton = GameObject.Find("continueButton").GetComponent<Image>();

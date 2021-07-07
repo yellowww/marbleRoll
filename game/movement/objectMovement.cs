@@ -7,6 +7,8 @@ public class objectMovement : MonoBehaviour
     // Start is called before the first frame update
     cameraMovement cameraMovementScript;
     main mainScript;
+    hintButton hintButton;
+
     bool firstMovementFrame;
     public string blockType;
     float offX;
@@ -29,10 +31,14 @@ public class objectMovement : MonoBehaviour
 
     public bool moveable = true;
 
+    public bool isRemoved = false;
+
     void Start()
     {
         cameraMovementScript = FindObjectOfType<cameraMovement>();
         mainScript = FindObjectOfType<main>();
+        hintButton = FindObjectOfType<hintButton>();
+
         metaIndex = new string[] { "ramp", "rightAngleCurve", "leftAngleCurve", "end", "start"};
         allMeta = new float[][] { new float[2] {0f, 180f},
                                   new float[2] {0f, -90f },
@@ -48,7 +54,7 @@ public class objectMovement : MonoBehaviour
         {
             if (cameraMovementScript.dragingObject && cameraMovementScript.currentDragingObject == int.Parse(this.name.Split('k')[1]))
             {
-                if (moveable)
+                if (moveable && !isRemoved)
                 {
                     moveObject();
                     checkHotbarHover();
@@ -113,9 +119,9 @@ public class objectMovement : MonoBehaviour
             }
             
         }
-        
+        hintButton.updateShading();
 
-        
+
     }
 
     void checkHotbarHover()
@@ -154,7 +160,7 @@ public class objectMovement : MonoBehaviour
         float[] thisPMetaData = getMetaDataFrom(this.gameObject, rotation);
         for (int i = 1; i <= mainScript.objectsOnScreen; i++)
         {
-            if (this.name != "block" + i)
+            if (this.name != "block" + i && !mainScript.allBlocks[i - 1].GetComponent<objectMovement>().isRemoved)
             {
                 GameObject selectedObject = mainScript.allBlocks[i-1];
                 objectMovement selectedMovementScript = selectedObject.GetComponent<objectMovement>();

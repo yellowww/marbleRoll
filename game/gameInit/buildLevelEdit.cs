@@ -122,7 +122,7 @@ public class buildLevelEdit : MonoBehaviour
         }
     }
 
-    GameObject[] getAllChildren(GameObject thisObject)
+    public GameObject[] getAllChildren(GameObject thisObject)
     {
         List<GameObject> childrenList = new List<GameObject>();
         childrenList.Add(thisObject);

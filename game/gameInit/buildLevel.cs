@@ -383,27 +383,55 @@ public class buildLevel : MonoBehaviour
             deleted = length-2;
         }
         int[] usedIndexes = new int[deleted];
-
+        main.removedBlocks = new GameObject[deleted];
+        main.removedLockedWith = new GameObject[deleted][];
         List<GameObject> remainingBlocks = new List<GameObject>(blocks);
         for (int i=0;i<deleted;i++)
         {
             int deleteIndex = getRandomPosition(usedIndexes, blocks.Length - 1);
-            usedIndexes[i] = deleteIndex;
+            GameObject[] lockedWith = getLockedWithValues(blocks[deleteIndex].GetComponent<objectMovement>().lockedWith);
+            main.removedLockedWith[i] = lockedWith;
 
-            remainingBlocks.Remove(blocks[deleteIndex]);
-            destroyBlock(blocks[deleteIndex]);
+            usedIndexes[i] = deleteIndex;
+            hideAllChildren(blocks[deleteIndex]);
+            clearData(blocks[deleteIndex]);
+            main.removedBlocks[i] = blocks[deleteIndex];
+            blocks[deleteIndex].GetComponent<objectMovement>().isRemoved = true;
 
         }
 
         return remainingBlocks;
     }
+
+    GameObject[] getLockedWithValues(GameObject[] gameObject)
+    {
+        GameObject[] returnArray = new GameObject[2];
+        returnArray[0] = GameObject.Find(gameObject[0].name);
+        returnArray[1] = GameObject.Find(gameObject[1].name);
+        return returnArray;
+    }
+    void hideAllChildren(GameObject gameObject)
+    {
+        GameObject[] allChildren = buildEditor.getAllChildren(gameObject);
+        for (int i = 0; i < allChildren.Length; i++)
+        {
+            MeshRenderer renderer = allChildren[i].GetComponent<MeshRenderer>();
+            BoxCollider colider = allChildren[i].GetComponent<BoxCollider>();
+            if (renderer && colider)
+            {
+                renderer.enabled = false;
+                colider.enabled = false;
+            }
+
+        }
+    }
+
     void destroyBlock(GameObject block)
     {
         main mainScript = FindObjectOfType<main>();
         clearData(block);
         Destroy(block);
         mainScript.objectsOnScreen--;
-        Debug.Log(main.objectsOnScreen);
         int blockIndex = int.Parse(block.name.Split('k')[1]);
         mainScript.allBlocks.RemoveAt(blockIndex - 1);
 

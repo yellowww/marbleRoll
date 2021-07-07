@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class main : MonoBehaviour
-{
-    // Start is called before the first frame update
-    
+{   
     public int objectsOnScreen = 2;
     public GameObject selectedObject = null;
     public bool GUIHover = false;
@@ -33,9 +31,9 @@ public class main : MonoBehaviour
     public int currentLevel = 1;
 
     public List<GameObject> allBlocks = null;
-    void Start()
-    {
-    }
+    public GameObject[] removedBlocks;
+    public GameObject[][] removedLockedWith;
+
 
     public void init(GameObject[] startingBlocks)
     {
@@ -49,10 +47,5 @@ public class main : MonoBehaviour
             startingBlocks[i] = GameObject.Find("block" + (i + 1));
         }
         allBlocks = new List<GameObject>(startingBlocks);
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

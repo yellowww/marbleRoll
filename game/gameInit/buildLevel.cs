@@ -384,13 +384,10 @@ public class buildLevel : MonoBehaviour
         }
         int[] usedIndexes = new int[deleted];
         main.removedBlocks = new GameObject[deleted];
-        main.removedLockedWith = new GameObject[deleted][];
         List<GameObject> remainingBlocks = new List<GameObject>(blocks);
         for (int i=0;i<deleted;i++)
         {
             int deleteIndex = getRandomPosition(usedIndexes, blocks.Length - 1);
-            GameObject[] lockedWith = getLockedWithValues(blocks[deleteIndex].GetComponent<objectMovement>().lockedWith);
-            main.removedLockedWith[i] = lockedWith;
 
             usedIndexes[i] = deleteIndex;
             hideAllChildren(blocks[deleteIndex]);
@@ -403,13 +400,6 @@ public class buildLevel : MonoBehaviour
         return remainingBlocks;
     }
 
-    GameObject[] getLockedWithValues(GameObject[] gameObject)
-    {
-        GameObject[] returnArray = new GameObject[2];
-        returnArray[0] = GameObject.Find(gameObject[0].name);
-        returnArray[1] = GameObject.Find(gameObject[1].name);
-        return returnArray;
-    }
     void hideAllChildren(GameObject gameObject)
     {
         GameObject[] allChildren = buildEditor.getAllChildren(gameObject);

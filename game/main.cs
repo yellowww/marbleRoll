@@ -32,7 +32,6 @@ public class main : MonoBehaviour
 
     public List<GameObject> allBlocks = null;
     public GameObject[] removedBlocks;
-    public GameObject[][] removedLockedWith;
 
 
     public void init(GameObject[] startingBlocks)

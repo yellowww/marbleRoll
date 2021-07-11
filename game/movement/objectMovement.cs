@@ -118,6 +118,9 @@ public class objectMovement : MonoBehaviour
                 lockedWith[0] = null;
             }
             
+        } else
+        {
+            this.transform.localScale = toScaleValue;
         }
         hintButton.updateShading();
 

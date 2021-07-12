@@ -248,11 +248,12 @@ public class hintButton : MonoBehaviour
         {
             if(main.allBlocks[i].name != gameObject.name)
             {
-                if(roundTo(main.allBlocks[i].transform.position,0.02f) == roundTo(gameObject.transform.position,0.02f))
+                if(roundTo(main.allBlocks[i].transform.position,1f) == roundTo(gameObject.transform.position,1f))
                 {
                     selectedScript = main.allBlocks[i].GetComponent<objectMovement>();
-                    if(selectedScript.rotation == thisScript.rotation)
+                    if (adjustRotation(selectedScript.rotation) == adjustRotation(thisScript.rotation))
                     {
+
                         if(selectedScript.blockType == thisScript.blockType)
                         {
                             return true;
@@ -263,6 +264,16 @@ public class hintButton : MonoBehaviour
             }
         }
         return false;
+    }
+
+    float adjustRotation(float rotation)
+    {
+        float newRotation = rotation;
+        if(rotation<0)
+        {
+            newRotation = 360 + rotation;
+        }
+        return newRotation;
     }
 
     Vector3 roundTo(Vector3 value, float place)

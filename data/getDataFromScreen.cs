@@ -22,7 +22,6 @@ public class getDataFromScreen : MonoBehaviour
             if(!keyDown)
             {
                 keyDown = true;
-                Debug.Log("copied!");
                 CopyToClipboard(getData());
             }
         }  else
@@ -33,6 +32,7 @@ public class getDataFromScreen : MonoBehaviour
 
     public static void CopyToClipboard(string s)
     {
+        Debug.Log("copied!");
         GUIUtility.systemCopyBuffer = s;
     }
 
@@ -46,16 +46,23 @@ public class getDataFromScreen : MonoBehaviour
             script = main.allBlocks[i].GetComponent<objectMovement>();
 
             subString = "";
-            subString += main.allBlocks[i].transform.position.ToString() + ',';
-            subString += script.rotation.ToString() + ',';
-            subString += script.blockType.ToString() + ',';
+            subString += main.allBlocks[i].transform.position.ToString() + ';';
+            subString += script.rotation.ToString() + ';';
+            subString += script.blockType.ToString() + ';';
             subString += script.isRemoved.ToString();
             data += subString;
-            if (i < main.allBlocks.Count-1)
-            {
-                data += "\n";
-            }
+            data += "\n";
 
+        }
+        data += "cp";
+        data += "\n";
+        foreach (Transform child in GameObject.Find("checkPoints").transform)
+        {
+            subString = "";
+            subString += child.gameObject.transform.position.ToString() + ';';
+            subString += child.gameObject.transform.rotation.ToString();
+            data += subString;
+            data += "\n";
         }
         return data;
     }

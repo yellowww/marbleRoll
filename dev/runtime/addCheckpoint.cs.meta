@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1b7a43e65177e4e46a45456db7365604
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - checkPointPrefab: {fileID: 5970930063049120550, guid: f8837b47fc3e34c4aac623c94c36c358,
+      type: 3}
+  - checkpointContainer: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

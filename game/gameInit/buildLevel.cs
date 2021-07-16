@@ -11,6 +11,7 @@ public class buildLevel : MonoBehaviour
     buildLevelEdit buildEditor;
     cameraMovement cameraMovement;
     playMode playMode;
+    dev developer;
 
     GameObject parent;
     GameObject buildContainer;
@@ -38,14 +39,21 @@ public class buildLevel : MonoBehaviour
         buildEditor = FindObjectOfType<buildLevelEdit>();
         cameraMovement = FindObjectOfType<cameraMovement>();
         playMode = FindObjectOfType<playMode>();
+        developer = FindObjectOfType<dev>();
 
         parent = GameObject.Find("blockContainer");
         buildContainer = GameObject.Find("buildLevelContainer");
         checkpointContainer = GameObject.Find("checkPoints");
-
+        if (!developer.inDev)
+        {
+            
+            initiateBuild();
+        } else
+        {
+            buildEmpty();
+        }
         
-        initiateBuild();
-
+        
         
     }
 
@@ -82,6 +90,33 @@ public class buildLevel : MonoBehaviour
             allAvaliblePrefabs[i] = allPrefabs[i];
         }
     }
+
+    public void buildEmpty() {
+        main.objectsOnScreen = 0;
+        main.init(new GameObject[0] {});
+        Camera.main.transform.position = new Vector3(0, 0, 15);
+        cameraMovement.cameraDistance = 15;
+        cameraMovement.lastXAngle = 0f;
+        cameraMovement.lastYAngle = 0f;
+        Camera.main.transform.eulerAngles = new Vector3(0, -180, 0);
+
+
+        main.doEndCheckPointAnimations = false;
+        main.inBetweenLevel = false;
+        main.loadingLevel = false;
+        playMode.shadeUI(255);
+        showPlayButton();
+
+        GameObject playButton = GameObject.Find("playButton");
+        playButton.GetComponent<Image>().sprite = playButtonSprite;
+
+        GameObject levelText = GameObject.Find("endLevelText");
+        levelText.GetComponent<Text>().enabled = false;
+
+        Image nextButton = GameObject.Find("continueButton").GetComponent<Image>();
+        nextButton.enabled = false;
+    }
+
 
 
     public void build(int targetPeices)
@@ -337,18 +372,23 @@ public class buildLevel : MonoBehaviour
             Vector3 position = new Vector3(positionX[currentPosition], positionY[currentPosition], positionZ[currentPosition]);
             thisBlock = Instantiate(checkPointPrefab, position, Quaternion.identity);
             thisBlock.transform.parent = checkpointContainer.transform;
-            thisBlock.name = "checkpoint";
+            thisBlock.name = "checkpoint"+i.ToString();
             objectMovement objectScript = allData[currentPosition].GetComponent<objectMovement>();
 
             string blockType = objectScript.blockType;
             float rotation = objectScript.rotation;
-            rotation += allMeta[System.Array.IndexOf(metaIndex, blockType)];
+            rotation += updateRotationForCurves(objectScript);
             thisBlock.transform.Rotate(new Vector3(0, rotation % 360, 0), Space.Self);
 
             usedIndexes[i] = currentPosition;
 
         }
 
+    }
+
+    public float updateRotationForCurves(objectMovement script)
+    {
+        return allMeta[System.Array.IndexOf(metaIndex, script.blockType)];
     }
 
     int getRandomPosition(int[] usedIndexes, int length)

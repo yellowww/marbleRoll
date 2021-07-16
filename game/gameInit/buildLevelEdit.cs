@@ -7,6 +7,7 @@ public class buildLevelEdit : MonoBehaviour
     public Material initBlockColor;
     main main;
     
+    
    
     void Start()
     {
@@ -18,6 +19,8 @@ public class buildLevelEdit : MonoBehaviour
 
      public Vector3 centerLevel(GameObject[] array) {
         main = FindObjectOfType<main>();
+        
+
         float[] allXPos = getPropertyArray(array, 0);
         float xMin = getMin(allXPos);
         float xMax = getMax(allXPos);

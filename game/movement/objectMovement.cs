@@ -22,7 +22,11 @@ public class objectMovement : MonoBehaviour
 
     public string[] metaIndex;
     //        bx-0  by-1   bz-2   ex-3 ey-4   ez-5   br-6  er-7
-    public float[][] allMeta;
+    public float[][] allMeta = new float[][] { new float[2] {0f, 180f},
+                                  new float[2] {0f, -90f },
+                                  new float[2] {0f, 90f },
+                                  new float[2] {0f, 0f },
+                                  new float[2] {0f,180f} };
 
     //                             front  back
     public bool[] endLocks = new bool[] { false, false };
@@ -165,8 +169,15 @@ public class objectMovement : MonoBehaviour
         {
             if (this.name != "block" + i && !mainScript.allBlocks[i - 1].GetComponent<objectMovement>().isRemoved)
             {
+
+                
                 GameObject selectedObject = mainScript.allBlocks[i-1];
-                objectMovement selectedMovementScript = selectedObject.GetComponent<objectMovement>();
+
+                if (this.gameObject.name == "block2" && selectedObject.name == "block1")
+                {
+
+                }
+                    objectMovement selectedMovementScript = selectedObject.GetComponent<objectMovement>();
                 //selected rotationMetaData
                 float[] selectedRMetaData = allMeta[System.Array.IndexOf(metaIndex, selectedMovementScript.blockType)];
                 float anglesMatch = 0f;
@@ -193,6 +204,7 @@ public class objectMovement : MonoBehaviour
                     float distX = Mathf.Abs((position.x + thisPMetaData[0]) - (selectedObject.transform.position.x + selectedPMetaData[3]));
                     float distY = Mathf.Abs((position.y + thisPMetaData[1]) - (selectedObject.transform.position.y + selectedPMetaData[4]));
                     float distZ = Mathf.Abs((position.z + thisPMetaData[2]) - (selectedObject.transform.position.z + selectedPMetaData[5]));
+
                     if (distX<1.5f && distY<1.5f && distZ<1.5f)
                     {
                         float targetX = selectedObject.transform.position.x + selectedPMetaData[3] - thisPMetaData[0];
@@ -201,6 +213,8 @@ public class objectMovement : MonoBehaviour
                         transform.position = new Vector3(targetX, targetY, targetZ);
                         endLocks[0] = true;
                         selectedMovementScript.endLocks[1] = true;
+
+
 
                         lockedWith[0] = selectedObject;
                         selectedMovementScript.lockedWith[1] = this.gameObject;

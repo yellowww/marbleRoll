@@ -36,6 +36,15 @@ public class getDataFromScreen : MonoBehaviour
         GUIUtility.systemCopyBuffer = s;
     }
 
+    string getFullVector(Vector3 position)
+    {
+        float x = position.x;
+        float y = position.y;
+        float z = position.z;
+
+        return "(" + x + "," + y + "," + z + ")";
+    }
+
     string getData()
     {
         string data = "";
@@ -46,7 +55,7 @@ public class getDataFromScreen : MonoBehaviour
             script = main.allBlocks[i].GetComponent<objectMovement>();
 
             subString = "";
-            subString += main.allBlocks[i].transform.position.ToString() + ';';
+            subString += getFullVector(main.allBlocks[i].transform.position) + ';';
             subString += script.rotation.ToString() + ';';
             subString += script.blockType.ToString() + ';';
             subString += script.isRemoved.ToString();

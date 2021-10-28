@@ -9,13 +9,14 @@ public class loadData : MonoBehaviour
     public TextAsset textAsset;
     public GameObject parent;
     public GameObject[] assetArray;
+    public GameObject checkpoint;
     main main;
     
     string[] assetLink = new string[5] { "end", "leftAngleCurve", "ramp", "rightAngleCurve", "start" };
     void Start()
     {
         main = FindObjectOfType<main>();
-        buildLevel(3);
+        buildLevel(1);
         
     }
 
@@ -53,8 +54,31 @@ public class loadData : MonoBehaviour
 
 
         }
+        addCheckPoints(cpData);
     }
 
+    void addCheckPoints(string[] cpData)
+    {
+        string split;
+        for(var i=0;i<cpData.Length;i++)
+        {
+            split = cpData[i].Split(';')[0];
+            Vector3 pos = stringToVec(split);
+            GameObject thisObject = Instantiate(checkpoint, pos, Quaternion.identity);
+            thisObject.transform.rotation = stringToQuat(cpData[i].Split(';')[1]);
+            Debug.Log(stringToQuat(cpData[i].Split(';')[1]));
+        }
+    }
+
+    Quaternion stringToQuat(string String)
+    {
+        float a = float.Parse(String.Split(',')[0].Split('(')[1]);
+        float b = float.Parse(String.Split(',')[1]);
+        float c = float.Parse(String.Split(',')[2]);
+        float d = float.Parse(String.Split(',')[3].Split(')')[0]);
+        Quaternion quat = new Quaternion(a, b, c, d);
+        return quat;
+    }
     Vector3 stringToVec(string String)
     {
         float x = float.Parse(String.Split(',')[0].Split('(')[1]);     

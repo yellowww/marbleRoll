@@ -68,7 +68,7 @@ public class getDataFromScreen : MonoBehaviour
         foreach (Transform child in GameObject.Find("checkPoints").transform)
         {
             subString = "";
-            subString += child.gameObject.transform.position.ToString() + ';';
+            subString += getFullVector(child.gameObject.transform.position) + ';';
             subString += child.gameObject.transform.rotation.ToString();
             data += subString;
             data += "\n";

@@ -10,13 +10,16 @@ public class loadData : MonoBehaviour
     public GameObject parent;
     public GameObject[] assetArray;
     public GameObject checkpoint;
+    dev devScript;
     main main;
     
     string[] assetLink = new string[5] { "end", "leftAngleCurve", "ramp", "rightAngleCurve", "start" };
     void Start()
     {
         main = FindObjectOfType<main>();
-        buildLevel(1);
+        devScript = FindObjectOfType<dev>();
+        if(devScript.inDev) buildLevel(1);
+        
         
     }
 
